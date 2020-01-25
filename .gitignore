@@ -1,7 +1,7 @@
 # Prerequisites
-*
-!*.c
-!Makefile
+*.d
+*.c~
+*.png
 
 # Object files
 *.o
