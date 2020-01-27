@@ -8,4 +8,4 @@ run: build
 test:build
 	./a3
 clean: 
-	rm a3 a3.c~ clint.py Makefile~
+	rm a3 a3.c~ Makefile~
