@@ -17,7 +17,7 @@ Hand* CreateHand() {
 }
 
 void AddCardToHand(Card *card, Hand *hand) {
-    assert(hand->num_cards_in_hand<kNumCardsInHand);
+  //    assert(hand->num_cards_in_hand<kNumCardsInHand);
     CardNode* card_node = (CardNode*) malloc(sizeof(CardNode));
     card_node->next_card = NULL;
     card_node->prev_card = NULL;
@@ -37,23 +37,31 @@ void AddCardToHand(Card *card, Hand *hand) {
 Card* RemoveCardFromHand(Card *card, Hand *hand) {
     if (hand->first_card==NULL){return card;}
     CardNode* cur = hand->first_card;
-    Card* tmp = cur->this_card;
-    if(&(cur->this_card)==&card) {
+    //Card* tmp = cur->this_card;
+    if(cur->this_card==card) {
       // hand->first_card = hand->first_card->next_card;
       //hand->first_card->prev_card = NULL;
       // free(cur);
-      hand->first_card = hand->first_card->next_card;
-      free(hand->first_card->prev_card);
-      hand->first_card->prev_card = NULL;
+      if (cur->next_card==NULL){
+        free(hand->first_card);
+        hand->first_card=NULL;
         hand->num_cards_in_hand--;
-        return tmp;
+        return card;
+      }
+      hand->first_card = hand->first_card->next_card;
+      // free(hand->first_card->prev_card);
+      if(hand->first_card!=NULL){
+        free(hand->first_card->prev_card);
+        hand->first_card->prev_card = NULL;
+      }
+        hand->num_cards_in_hand--;
+        return card;
     }
-    while (cur!=NULL) {
-        if (cur->next_card->this_card->suit == card->suit &&
-            cur->next_card->this_card->name == card->name) {
+    while (cur!=NULL && cur->next_card!=NULL) {
+        if (cur->next_card->this_card == card) {
             cur->next_card = cur->next_card->next_card;
-            free(cur->next_card->prev_card);
             if (cur->next_card!=NULL){
+              free(cur->next_card->prev_card);
               cur->next_card->prev_card = cur;
             }
             hand->num_cards_in_hand--;
@@ -101,8 +109,8 @@ int IsLegalMove(Hand *hand, Card *leadCard, Card *playedCard) {
 }
 
 int WhoWon(Card *leadCard, Card *followedCard, Suit trump) {
-    if (leadCard->suit == followedCard->suit) {
-        if (leadCard->value>followedCard->value) {
+    if ( leadCard->suit == followedCard->suit) {
+        if (leadCard->name>followedCard->name) {
             return 1;
         }
         else {

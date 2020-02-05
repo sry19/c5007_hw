@@ -4,7 +4,7 @@
 #define PRINT_DEBUG 1
 #include <assert.h>
 Deck* CreateDeck() {
-    Deck* d = (Deck*) malloc(sizeof(Deck) + kNumCardsInDeck * sizeof(Card) );
+  Deck* d = (Deck*) malloc(sizeof(Deck));
     d->top_card = -1;
     return d;
 }
@@ -39,7 +39,10 @@ void DestroyDeck(Deck* deck) {
   // for (int i=0;i<kNumCardsInDeck;i++) {
   //    free(deck->cards[i]);
   //}
-  free(deck->cards);
+  for (int i=0;i<=deck->top_card;i++){
+    DestroyCard(deck->cards[i]);
+  }
+  //free(deck->cards);
     free(deck);
 }
 
