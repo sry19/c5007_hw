@@ -42,7 +42,7 @@ void DestroyDeck(Deck* deck) {
   for (int i=0;i<=deck->top_card;i++){
     DestroyCard(deck->cards[i]);
   }
-  //free(deck->cards);
+  //  free(deck->cards);
     free(deck);
 }
 
