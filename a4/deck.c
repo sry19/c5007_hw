@@ -66,7 +66,7 @@ Deck* PopulateDeck() {//Create all the cards and pushes them into the Deck.
         for (j=HEARTS;j<=DIAMONDS;j++) {
             Card* card = (Card*) malloc(sizeof(Card));
             card->suit = (enum suit)j;
-            card->value = i;
+            card->value = 1;
             card->name = (enum name)i;
             PushCardToDeck(card, d);
         }
