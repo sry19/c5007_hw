@@ -1,14 +1,6 @@
 #!/bin/bash
-#Problem·Statement:·Often·I·have·to·know the basic information about the sys
-#em when I start my ubuntu
 
-#in order to this, I use the 'uname -v' command to help orient myself.
-#Name of command: ls
-#·Example·of·its·usage:
-#·-bash-4.2$uname -v
-#
-#·Here·is·the·myscript.sh·script·that·can·know the linux kernel versiont\
-#·usage:·sh·myScript.sh
+
 echo "
      \$0 = $0
      \$1 = $1
@@ -37,12 +29,11 @@ file_tree () {
 #Problem·Statement:·Often·I·have·to·know·the·basic·information·about·the·sys
 #tem·when·I·start·my·ubuntu
 #in·order·to·this,·I·use·the·'uname·-v'·command·to·help·orient·myself.
-#Name·of·command:·ls
+#Name·of·command:·uname -v
 
 #Example·of·its·usage:
 #-bash-4.2$uname·-v
-#Here·is·the·myscript.sh·script·that·can·know·the·linux·kernel·version
-#usage:·sh·myScript.sh$
+##30~18.04.1-Ubuntu SMP Fri Jan 17 06:14:09 UTC 2020
 u_version () {
     uname -v
     return
@@ -59,13 +50,23 @@ u_version () {
 #4.0K	myscript.sh~
 #8.0K	readme.md
 space_usage () {
+    echo "this is the file space usage"
     du -sh -- *
     return
 }
+#problem statement: print the date
+#in order to do this, I use 'date' to help orient myself
+#Name of command: date
+
+#Example of its usage:
+#$date
+#Tue Feb 25 17:27:46 PST 2020
 print_date () {
+    echo "this is the date"
     date
     return
 }
+
 case $1 in
     file_tree)
 	file_tree

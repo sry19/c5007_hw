@@ -1,12 +1,12 @@
 ### TODO Please edit the following information in your assignment
 
 - Name(s):
-- How many hours did it take you to complete this lab?
-- Did you collaborate with any other students/TAs/Professors?
+- How many hours did it take you to complete this lab? 3 hours
+- Did you collaborate with any other students/TAs/Professors? no
 - Did you use any external resources? (Cite them below)
-  - tbd
-  - tbd
-- (Optional) What was your favorite part of the assignment?
+  - https://infojinx.com/2017/11/du-command-check-disk-space-utilization-linux/
+  - http://www.panix.com/~elflord/unix/bash-tute.html
+- (Optional) What was your favorite part of the assignment? practice writing script
 - (Optional) How would you improve the assignment?
 
 (See the writeup on Canvas)
