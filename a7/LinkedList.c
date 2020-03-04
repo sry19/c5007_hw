@@ -84,9 +84,8 @@ int InsertLinkedList(LinkedList list, void *data) {
   LinkedListNodePtr new_node = CreateLinkedListNode(data);
   
   if (new_node == NULL) {
-    return 1; 
+    return 1;
   }
-  
   if (list->num_elements == 0) {
     Assert007(list->head == NULL);  // debugging aid
     Assert007(list->tail == NULL);  // debugging aid
@@ -95,8 +94,7 @@ int InsertLinkedList(LinkedList list, void *data) {
     new_node->next = new_node->prev = NULL;
     list->num_elements = 1U;
     return 0;
-  } 
-  
+  }
   // Step 3.
   // typical case; list has >=1 elements
   list->head->prev = new_node;
@@ -107,7 +105,7 @@ int InsertLinkedList(LinkedList list, void *data) {
 }
 
 int AppendLinkedList(LinkedList list, void *data) {
-  Assert007(list != NULL); 
+  Assert007(list != NULL);
 
   // Step 5: implement AppendLinkedList.  It's kind of like
   // InsertLinkedList, but add to the end instead of the beginning.
@@ -134,7 +132,7 @@ int AppendLinkedList(LinkedList list, void *data) {
 
 int PopLinkedList(LinkedList list, void **data) {
     Assert007(list != NULL);
-    Assert007(data != NULL); 
+    Assert007(data != NULL);
 
   // Step 4: implement PopLinkedList.  Make sure you test for
   // and empty list and fail.  If the list is non-empty, there
@@ -142,8 +140,22 @@ int PopLinkedList(LinkedList list, void **data) {
   // and (b) the general case of a list with >=2 elements in it.
   // Be sure to call free() to deallocate the memory that was
   // previously allocated by InsertLinkedList().
-
-    return 0; 
+    if (list->num_elements == 0) {
+      return 1;
+    }
+    if (list->num_elements == 1) {
+      data = list->head->payload;
+      DestroyLinkedListNode(list->head);
+      list->head = NULL;
+      list->tail = NULL;
+      list->num_elements = 0;
+      return 0;
+    }
+    *data = list->head->payload;
+    list->head = list->head->next;
+    DestroyLinkedListNode(list->head->prev);
+    list->num_elements --;
+    return 0;
 }
 
 int SliceLinkedList(LinkedList list, void **data) {
@@ -151,9 +163,22 @@ int SliceLinkedList(LinkedList list, void **data) {
     Assert007(data != NULL);
 
   // Step 6: implement SliceLinkedList.
-
-    
-    return 0; 
+    if·(list->num_elements·==·0)·{
+        return·1;
+      }
+    if·(list->num_elements·==·1)·{
+        *data·=·list->head->payload;
+        DestroyLinkedListNode(list->head);
+        list->head·=·NULL;
+        list->tail·=·NULL;
+        list->num_elements·=·0;
+        return 0;
+      }
+    data·=·list->tail->payload;
+    list->tail = list->tail->prev;
+    DestroyLinkedListNode(list->tail->next);
+    list->num_elements --;
+    return 0;
 }
 
 void SortLinkedList(LinkedList list, 
@@ -217,7 +242,11 @@ int LLIterNext(LLIter iter) {
 
   // Step 7: if there is another node beyond the iterator, advance to it,
   // and return 0. If there isn't another node, return 1. 
-  
+  if (iter->cur_node->next != NULL) {
+    iter->cur_node = iter->cur_node->next;
+    return 0;
+  }
+  return 1;
 }
 
 int LLIterGetPayload(LLIter iter, void** data) {
@@ -236,7 +265,11 @@ int LLIterPrev(LLIter iter) {
   Assert007(iter != NULL); 
   // Step 8:  if there is another node beyond the iterator, go to it,
   // and return 0. If not return 1. 
-
+  if (iter->cur_node->prev != NULL) {
+    iter->cur_node = iter->cur_node->prev;
+    return 0;
+  }
+  return 1;
 }
 
 int DestroyLLIter(LLIter iter) {
@@ -283,6 +316,34 @@ int LLIterDelete(LLIter iter, LLPayloadFreeFnPtr payload_free_function) {
   // Be sure to call the payload_free_function to free the payload
   // the iterator is pointing to, and also free any LinkedList
   // data structure element as appropriate.
-  
-  
+  if (iter->list->num_elements == 1) {
+    DestroyLinkedListNode(iter->cur_node);
+    DestroyLinkedList(iter->list,payload_free_function);
+    DestroyLLIter(iter);
+    return 0;
+  }
+  if (iter->cur_node == iter->list->head) {
+    LinkedListNode c = iter->cur_node;
+    LLIterNext(iter);
+    payload_free_function(c->payload);
+    DestroyLinkedListNode(c);
+    iter->cur_node->prev = NULL;
+    return 0;
+  }
+  if (iter->cur_node == iter->list->tail) {
+    LinkedListNode c = iter->cur_node;
+    LLIterPrev(iter);
+    payload_free_function(c->payload);
+    DestroyLinkedListNode(c);
+    iter->cur_node->next = NULL;
+    return 0;
+  }
+  LinkedListNode c = iter->cur_node;
+  LinkedListNode pre = iter->cur_node->prev;
+  LLIterPrev(iter);
+  payload_free_function(c->payload);
+  DestroyLinkedListNode(c);
+  pre->next = iter->cur_node;
+  iter->cur_node->prev = pre;
+  return 0;
 }
