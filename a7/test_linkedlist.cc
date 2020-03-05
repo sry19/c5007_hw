@@ -1,9 +1,9 @@
 // CS 5007, Northeastern University, Seattle
 // Summer 2019
 // Adrienne Slaughter
-// 
-// Inspired by UW CSE 333; used with permission. 
-// 
+//
+// Inspired by UW CSE 333; used with permission.
+//
 // This is free software: you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published
 //  by the Free Software Foundation, either version 3 of the License,
@@ -49,9 +49,9 @@ int CompareMyThing(void* thing1, void* thing2) {
         return 0;
     }
     if (((MyThing*)thing1)->number < ((MyThing*)thing2)->number) {
-        return -1;  
+        return -1;
     } else {
-        return 1; 
+        return 1;
     }
 }
 
@@ -71,7 +71,7 @@ TEST(LinkedList, addElem) {
 
     InsertLinkedList(list, thing1);
 
-    // The 1u refers to unsigned 1 
+    // The 1u refers to unsigned 1
     EXPECT_EQ(list->num_elements, 1u);
     EXPECT_EQ(list->head->payload, thing1);
     EXPECT_EQ(list->tail->payload, thing1);
@@ -80,15 +80,15 @@ TEST(LinkedList, addElem) {
     EXPECT_TRUE(list->tail->next == NULL);
     EXPECT_TRUE(list->tail->prev == NULL);
 
-    MyThing *payload; 
-    int res = PopLinkedList(list, (void**)&payload); 
-    EXPECT_EQ(res, 0); 
+    MyThing *payload;
+    int res = PopLinkedList(list, (void**)&payload);
+    EXPECT_EQ(res, 0);
     EXPECT_EQ(payload, thing1);
     EXPECT_EQ(payload->number, thing1->number);
-    EXPECT_EQ(payload->name, thing1->name); 
-    
-    DestroyMyThing(payload); 
-    
+    EXPECT_EQ(payload->name, thing1->name);
+
+    DestroyMyThing(payload);
+
     DestroyLinkedList(list, &DestroyMyThing);
 }
 
@@ -127,15 +127,15 @@ TEST(LinkedList, removeOneElem) {
 
     EXPECT_EQ(list->num_elements, 2u);
 
-    MyThing *thing3; 
+    MyThing *thing3;
 
     int code = PopLinkedList(list, (void**)&thing3);
     EXPECT_EQ(code, 0);
     EXPECT_EQ(list->num_elements, 1u);
     EXPECT_EQ(thing3, thing2);
 
-    DestroyMyThing(thing3); 
-    
+    DestroyMyThing(thing3);
+
     DestroyLinkedList(list, &DestroyMyThing);
 }
 
@@ -149,7 +149,7 @@ TEST(LinkedList, removeTwoElem) {
     InsertLinkedList(list, thing1);
     InsertLinkedList(list, thing2);
 
-    MyThing *popped; 
+    MyThing *popped;
 
     EXPECT_EQ(list->num_elements, 2u);
 
@@ -158,14 +158,14 @@ TEST(LinkedList, removeTwoElem) {
     EXPECT_EQ(list->num_elements, 1u);
     EXPECT_EQ(popped, thing2);
     DestroyMyThing(popped);
-    
+
     code = PopLinkedList(list, (void**)&popped);
 
     EXPECT_EQ(code, 0);
     EXPECT_EQ(list->num_elements, 0u);
     EXPECT_EQ(popped, thing1);
     DestroyMyThing(popped);
-    
+
     DestroyLinkedList(list, &DestroyMyThing);
 }
 
@@ -202,7 +202,7 @@ TEST(LinkedList, Slice) {
     InsertLinkedList(list, thing1);
     InsertLinkedList(list, thing2);
 
-    MyThing *popped; 
+    MyThing *popped;
 
     EXPECT_EQ(list->num_elements, 2u);
 
@@ -211,14 +211,14 @@ TEST(LinkedList, Slice) {
     EXPECT_EQ(list->num_elements, 1u);
     EXPECT_EQ(popped, thing1);
     DestroyMyThing(popped);
-    
+
     code = SliceLinkedList(list, (void**)&popped);
 
     EXPECT_EQ(code, 0);
     EXPECT_EQ(list->num_elements, 0u);
     EXPECT_EQ(popped, thing2);
     DestroyMyThing(popped);
-    
+
     DestroyLinkedList(list, &DestroyMyThing);
 }
 
@@ -226,29 +226,29 @@ TEST(LLIterator, GetPayload) {
     LinkedList list = CreateLinkedList();
 
     if (list == NULL) return;
-    
+
     // Add elements to the LL
-    unsigned int num_items = 10; 
-    
-    MyThing* things[num_items]; 
-    for (unsigned int i=0; i<num_items; i++) {
+    unsigned int num_items = 10;
+
+    MyThing* things[num_items];
+    for (unsigned int i = 0; i < num_items; i++) {
       things[i] = CreateMyThing(i, "aThing");
-      InsertLinkedList(list, things[i]); 
+      InsertLinkedList(list, things[i]);
     }
-    
-    EXPECT_EQ(list->num_elements, num_items);    
+
+    EXPECT_EQ(list->num_elements, num_items);
 
     void* payload;
-        
+
     LLIter iter = CreateLLIter(list);
 
-    for (int i=num_items-1; i>=0; i--) {
-      LLIterGetPayload(iter, &payload); 
+    for (int i = num_items-1; i >= 0; i--) {
+      LLIterGetPayload(iter, &payload);
       EXPECT_EQ(payload, things[i]);
       LLIterNext(iter);
     }
-        
-    DestroyLLIter(iter); 
+
+    DestroyLLIter(iter);
     DestroyLinkedList(list, &DestroyMyThing);
 }
 
@@ -257,7 +257,7 @@ TEST(LinkedList, Sort) {
     LinkedList list = CreateLinkedList();
 
     if (list == NULL) return;
-    
+
     // Add elements to the LL
     InsertLinkedList(list, CreateMyThing(5, "foo"));
     InsertLinkedList(list, CreateMyThing(10, "foo"));
@@ -269,21 +269,21 @@ TEST(LinkedList, Sort) {
 
     EXPECT_EQ(list->num_elements, 7u);
 
-    SortLinkedList(list, 1, CompareMyThing); 
+    SortLinkedList(list, 1, CompareMyThing);
 
     LLIter iter = CreateLLIter(list);
 
-    MyThing* payload; 
-    int last_val = 0; 
+    MyThing* payload;
+    int last_val = 0;
 
-    while(LLIterHasNext(iter)) {
-        LLIterGetPayload(iter, (void**)&payload); 
-        EXPECT_TRUE((payload)->number >= last_val); 
+    while (LLIterHasNext(iter)) {
+        LLIterGetPayload(iter, (void**)&payload);
+        EXPECT_TRUE((payload)->number >= last_val);
         last_val = payload->number;
         LLIterNext(iter);
     }
-    
-    DestroyLLIter(iter); 
+
+    DestroyLLIter(iter);
     DestroyLinkedList(list, &DestroyMyThing);
 }
 
@@ -292,19 +292,19 @@ TEST(LinkedList, Sort) {
 TEST(LLIterator, IterForward) {
     LinkedList list = CreateLinkedList();
 
-    unsigned int num_items = 10; 
-    
-    MyThing* things[num_items]; 
-    for (unsigned int i=0; i<num_items; i++) {
+    unsigned int num_items = 10;
+
+    MyThing* things[num_items];
+    for (unsigned int i = 0; i < num_items; i++) {
       things[i] = CreateMyThing(i, "aThing");
-      InsertLinkedList(list, things[i]); 
+      InsertLinkedList(list, things[i]);
     }
-    
-    EXPECT_EQ(list->num_elements, num_items);    
+
+    EXPECT_EQ(list->num_elements, num_items);
 
     LLIter iter = CreateLLIter(list);
     EXPECT_TRUE(iter->cur_node != NULL);
-    
+
     // If it's pointing at the head of the list, the prev node should be null
     EXPECT_EQ(iter->cur_node, list->head);
     EXPECT_TRUE(iter->cur_node->prev == NULL);
@@ -312,27 +312,27 @@ TEST(LLIterator, IterForward) {
     EXPECT_FALSE(LLIterHasPrev(iter));
     // Get the first one (no prev node)
     EXPECT_EQ(0, LLIterNext(iter));
-    void *payload; 
-    
-    for (int i=num_items-2; i>=2; i--) {
+    void *payload;
+
+    for (int i = num_items-2; i >= 2; i--) {
       LLIterGetPayload(iter, &payload);
-      EXPECT_EQ(things[i],payload);
+      EXPECT_EQ(things[i], payload);
       EXPECT_TRUE(LLIterHasNext(iter));
       EXPECT_TRUE(LLIterHasPrev(iter));
       EXPECT_EQ(0, LLIterNext(iter));
     }
     LLIterGetPayload(iter, &payload);
-    EXPECT_EQ(things[1],payload);
+    EXPECT_EQ(things[1], payload);
     // Now, get the last one
     // Moves to element 0
     EXPECT_EQ(0, LLIterNext(iter));
     LLIterGetPayload(iter, &payload);
-    EXPECT_EQ(things[0],payload);
-    
+    EXPECT_EQ(things[0], payload);
+
     EXPECT_FALSE(LLIterHasNext(iter));
     EXPECT_TRUE(LLIterHasPrev(iter));
 
-    EXPECT_EQ(1, LLIterNext(iter)); 
+    EXPECT_EQ(1, LLIterNext(iter));
 
     DestroyLLIter(iter);
     DestroyLinkedList(list, &DestroyMyThing);
@@ -363,35 +363,35 @@ TEST(LLIterator, IterBackward) {
 }
 
 // TODO: Utilize this more
-void CreateTestList(LinkedList* list, MyThing* elements[], unsigned int num_elements) {
+void CreateTestList(LinkedList* list, MyThing* elements[],
+                    unsigned int num_elements) {
 // Create a list
-   *list = CreateLinkedList();
+  *list = CreateLinkedList();
 
-   for (unsigned int i = 0; i<num_elements; i++) {
-     elements[i] = CreateMyThing(i, "bar"); 
-     InsertLinkedList(*list, elements[i]);
-     EXPECT_EQ(i+1u, (*list)->num_elements);
-   }
+  for (unsigned int i = 0; i < num_elements; i++) {
+    elements[i] = CreateMyThing(i, "bar");
+    InsertLinkedList(*list, elements[i]);
+    EXPECT_EQ(i+1u, (*list)->num_elements);
+  }
 }
 
 TEST(LLIterator, HasNext) {
   LinkedList list = NULL;
-  unsigned int num_items = 10; 
+  unsigned int num_items = 10;
   MyThing* items[num_items];
   CreateTestList(&list, items, num_items);
 
-  LLIter iter = CreateLLIter(list); 
-  
-  for (unsigned int i=0; i<num_items-1; i++) {
+  LLIter iter = CreateLLIter(list);
+
+  for (unsigned int i = 0; i < num_items-1; i++) {
     EXPECT_EQ(1, LLIterHasNext(iter));
-    EXPECT_EQ(0, LLIterNext(iter)); 
+    EXPECT_EQ(0, LLIterNext(iter));
   }
-  
+
   EXPECT_EQ(0, LLIterHasNext(iter));
 
   DestroyLLIter(iter);
-  DestroyLinkedList(list, &DestroyMyThing); 
-  
+  DestroyLinkedList(list, &DestroyMyThing);
 }
 
 TEST(LLIterator, Delete) {
@@ -400,18 +400,18 @@ TEST(LLIterator, Delete) {
 
   unsigned int num_elems = 10;
   MyThing* elements[num_elems];
-  for (unsigned int i = 0; i<num_elems; i++) {
-    elements[i] = CreateMyThing(i, "bar"); 
+  for (unsigned int i = 0; i < num_elems; i++) {
+    elements[i] = CreateMyThing(i, "bar");
     InsertLinkedList(list, elements[i]);
     EXPECT_EQ(i+1u, list->num_elements);
   }
-    
+
   // Create an iter
   LLIter iter = CreateLLIter(list);
 
   LLIterNext(iter);
   LLIterNext(iter);
-  
+
   // Should be at element 7 now
   MyThing* payload;
   LLIterGetPayload(iter, (void**)&payload);
@@ -422,18 +422,18 @@ TEST(LLIterator, Delete) {
 
   // Go to the end and delete the end
   while (LLIterHasNext(iter)) {
-    EXPECT_EQ(0, LLIterNext(iter)); 
+    EXPECT_EQ(0, LLIterNext(iter));
   }
   EXPECT_EQ(0, LLIterDelete(iter, &DestroyMyThing));
 
   // Go to the begining and delete the head
   while (LLIterHasPrev(iter)) {
-    EXPECT_EQ(0, LLIterPrev(iter)); 
+    EXPECT_EQ(0, LLIterPrev(iter));
   }
   EXPECT_EQ(0, LLIterDelete(iter, &DestroyMyThing));
 
-  EXPECT_EQ(7u, list->num_elements); 
-  
+  EXPECT_EQ(7u, list->num_elements);
+
   DestroyLLIter(iter);
   DestroyLinkedList(list, &DestroyMyThing);
 }
@@ -444,15 +444,15 @@ TEST(LLIterator, Insert) {
 
   unsigned int num_elems = 10;
   MyThing* elements[num_elems];
-  for (unsigned int i = 0; i<num_elems; i++) {
-    elements[i] = CreateMyThing(i, "bar"); 
+  for (unsigned int i = 0; i < num_elems; i++) {
+    elements[i] = CreateMyThing(i, "bar");
     InsertLinkedList(list, elements[i]);
     EXPECT_EQ(i+1u, list->num_elements);
   }
-    
+
   // Create an iter
   LLIter iter = CreateLLIter(list);
-  
+
   // Insert a new item
   LLIterNext(iter);
   LLIterNext(iter);
@@ -462,20 +462,19 @@ TEST(LLIterator, Insert) {
   LLIterGetPayload(iter, (void**)&payload);
   EXPECT_EQ(7, payload->number);
 
-  MyThing *thing11 = CreateMyThing(11, "foo"); 
+  MyThing *thing11 = CreateMyThing(11, "foo");
   EXPECT_EQ(0, LLIterInsertBefore(iter, thing11));
-  
+
   EXPECT_EQ(0, LLIterGetPayload(iter, (void**)&payload));
   EXPECT_EQ(7, payload->number);
 
   EXPECT_EQ(0, LLIterPrev(iter));
   EXPECT_EQ(0, LLIterGetPayload(iter, (void**)&payload));
   EXPECT_EQ(11, payload->number);
-  
+
   // Check the items
   DestroyLLIter(iter);
   DestroyLinkedList(list, &DestroyMyThing);
-  
 }
 
 
@@ -491,8 +490,7 @@ TEST(LLIterator, IterOne) {
     EXPECT_TRUE(iter->cur_node != NULL);
 
     EXPECT_EQ(1, LLIterNext(iter));
-    EXPECT_TRUE(LLIterNext(iter) != 0);
-
+    EXPECT_NE(LLIterNext(iter), 0);
     DestroyLLIter(iter);
     DestroyLinkedList(list, &DestroyMyThing);
 }

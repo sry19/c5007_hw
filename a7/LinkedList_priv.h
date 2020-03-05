@@ -1,9 +1,9 @@
 // CS 5007, Northeastern University, Seattle
 // Summer 2019
 // Adrienne Slaughter
-// 
-// Inspired by UW CSE 333; used with permission. 
-// 
+//
+// Inspired by UW CSE 333; used with permission.
+//
 // This is free software: you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published
 //  by the Free Software Foundation, either version 3 of the License,
@@ -80,4 +80,4 @@ int DestroyLinkedListNode(LinkedListNode *node);
 //   (primarily that the provide Ptr is in the list and could be free'd).
 int RemoveLLElem(LinkedList list, LinkedListNodePtr ptr);
 
-#endif  //LINKEDLIST_PRIV_H
+#endif  // LINKEDLIST_PRIV_H
