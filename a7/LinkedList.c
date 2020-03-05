@@ -64,6 +64,7 @@ LinkedListNodePtr CreateLinkedListNode(void *data) {
         // Out of memory
         return NULL;
     }
+    // initialize the newly allocated linked list node
     node->payload = data;
     node->next = NULL;
     node->prev = NULL;
