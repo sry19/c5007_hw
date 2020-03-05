@@ -142,9 +142,11 @@ int PopLinkedList(LinkedList list, void **data) {
   // and (b) the general case of a list with >=2 elements in it.
   // Be sure to call free() to deallocate the memory that was
   // previously allocated by InsertLinkedList().
+    // If we cannot pop an element from an empty list
     if (list->num_elements == 0) {
       return 1;
     }
+    // If there is a single element in the list
     if (list->num_elements == 1) {
       *data = list->head->payload;
       DestroyLinkedListNode(list->head);
@@ -153,6 +155,7 @@ int PopLinkedList(LinkedList list, void **data) {
       list->num_elements = 0;
       return 0;
     }
+    // If there are more than 1 element in the list
     *data = list->head->payload;
     list->head = list->head->next;
     DestroyLinkedListNode(list->head->prev);
