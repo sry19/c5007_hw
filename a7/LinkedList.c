@@ -325,28 +325,28 @@ int LLIterDelete(LLIter iter, LLPayloadFreeFnPtr payload_free_function) {
     return 0;
   }
   if (iter->cur_node == iter->list->head) {
-    LinkedListNode *c = iter->cur_node;
+    LinkedListNode *cur = iter->cur_node;
     LLIterNext(iter);
-    payload_free_function(c->payload);
-    DestroyLinkedListNode(c);
+    payload_free_function(cur->payload);
+    DestroyLinkedListNode(cur);
     iter->cur_node->prev = NULL;
     iter->list->num_elements--;
     return 0;
   }
   if (iter->cur_node == iter->list->tail) {
-    LinkedListNode* c = iter->cur_node;
+    LinkedListNode *cur = iter->cur_node;
     LLIterPrev(iter);
-    payload_free_function(c->payload);
-    DestroyLinkedListNode(c);
+    payload_free_function(cur->payload);
+    DestroyLinkedListNode(cur);
     iter->cur_node->next = NULL;
     iter->list->num_elements--;
     return 0;
   }
-  LinkedListNode *c = iter->cur_node;
+  LinkedListNode *cur = iter->cur_node;
   LinkedListNode *pre = iter->cur_node->prev;
   LLIterNext(iter);
-  payload_free_function(c->payload);
-  DestroyLinkedListNode(c);
+  payload_free_function(cur->payload);
+  DestroyLinkedListNode(cur);
   pre->next = iter->cur_node;
   iter->cur_node->prev = pre;
   iter->list->num_elements--;
