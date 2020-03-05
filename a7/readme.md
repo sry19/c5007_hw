@@ -1,19 +1,18 @@
-
 # Assignment 7: Linked List with Iterator, Google Testing
 
 ## Your Info
 
-When you are done, update this file with the following info: 
+When you are done, update this file with the following info:
 
-* Name
-* How many hours did it take you to complete the assignment? 
-* Did you collaborate with any other students/TAs/Professors?
+* Name Ruoyun Sun
+* How many hours did it take you to complete the assignment? 10 hours
+* Did you collaborate with any other students/TAs/Professors? No
 * Did you use any external resources? (note them below)
-    - tbd
-    - tbd
-* What was your favorite part of this assignment?
-* What was challenging about this assignment? 
-* How would you improve the assignment? 
+    - http://cheezyworld.com/wp-content/uploads/2010/12/PlainGoogleQuickTestReferenceGuide1.pdf
+    - https://batsov.com/articles/2011/11/25/emacs-tip-number-3-whitespace-cleanup/
+* What was your favorite part of this assignment? detailed guide
+* What was challenging about this assignment? understanding the relationship bwteen all parts
+* How would you improve the assignment? adding more tests
 
 ## Files
 
