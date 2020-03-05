@@ -1,3 +1,5 @@
+// Some methods were written by Ruoyun Sun on March 4th
+
 // CS 5007, Northeastern University, Seattle
 // Summer 2019
 // Adrienne Slaughter
