@@ -36,6 +36,7 @@ MyThing* CreateMyThing(int num, const char *word) {
   MyThing* thing = (MyThing*)malloc(sizeof(MyThing));
   thing->number = num;
   thing->name = word;
+  printf("%d",num);
   return thing;
 }
 
@@ -446,6 +447,7 @@ TEST(LLIterator, Insert) {
   MyThing* elements[num_elems];
   for (unsigned int i = 0; i < num_elems; i++) {
     elements[i] = CreateMyThing(i, "bar");
+    printf("%d", i);
     InsertLinkedList(list, elements[i]);
     EXPECT_EQ(i+1u, list->num_elements);
   }

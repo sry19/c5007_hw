@@ -45,11 +45,15 @@ int DestroyLinkedList(LinkedList list,
   // Step 2.
   // Free the payloads, as well as the nodes
   while (list->head != NULL) {
-    payload_free_function(list->head->payload);
-    LinkedListNode * cur = list->head;
+    LinkedListNode *cur = list->head;
+    payload_free_function(cur->payload);
     list->head = list->head->next;
     DestroyLinkedListNode(cur);
   }
+  list->head = NULL;
+  list->tail = NULL;
+  list->num_elements = 0;
+  free(list);
     return 0;
 }
 
@@ -102,6 +106,7 @@ int InsertLinkedList(LinkedList list, void *data) {
   // typical case; list has >=1 elements
   list->head->prev = new_node;
   new_node->next = list->head;
+  new_node->prev = NULL;
   list->head = list->head->prev;
   list->num_elements++;
   return 0;
@@ -128,6 +133,7 @@ int AppendLinkedList(LinkedList list, void *data) {
     }
   list->tail->next = new_node;
   new_node->prev = list->tail;
+  new_node->next = NULL;
   list->tail = list->tail->next;
   list->num_elements++;
   return 0;
@@ -160,6 +166,7 @@ int PopLinkedList(LinkedList list, void **data) {
     *data = list->head->payload;
     list->head = list->head->next;
     DestroyLinkedListNode(list->head->prev);
+    list->head->prev = NULL;
     list->num_elements--;
     return 0;
 }
@@ -186,6 +193,7 @@ int SliceLinkedList(LinkedList list, void **data) {
     *data = list->tail->payload;
     list->tail = list->tail->prev;
     DestroyLinkedListNode(list->tail->next);
+    list->tail->next = NULL;
     list->num_elements--;
     return 0;
 }
@@ -327,7 +335,8 @@ int LLIterDelete(LLIter iter, LLPayloadFreeFnPtr payload_free_function) {
   // data structure element as appropriate.
   // The list becomes empty after deleting.
   if (iter->list->num_elements == 1) {
-    DestroyLinkedListNode(iter->cur_node);
+    //payload_free_function(iter->cur_node->payload);
+    //DestroyLinkedListNode(iter->cur_node);
     DestroyLinkedList(iter->list, payload_free_function);
     DestroyLLIter(iter);
     return 0;
