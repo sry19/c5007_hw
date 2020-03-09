@@ -1,4 +1,7 @@
-// Some methods were written by Ruoyun Sun on March 4th
+// Name: Ruoyun Sun
+// Course number: cs5007
+// Some methods were written by Ruoyun Sun on March 4th,
+// all methods were finished on March 9th
 
 // CS 5007, Northeastern University, Seattle
 // Summer 2019
