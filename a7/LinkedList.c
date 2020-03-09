@@ -54,6 +54,9 @@ int DestroyLinkedList(LinkedList list,
     payload_free_function(cur->payload);
     list->head = list->head->next;
     DestroyLinkedListNode(cur);
+    if (list->head != NULL) {
+      list->head->prev = NULL;
+    }
   }
   // payload_free_function(list->head->payload);
   // DestroyLinkedListNode(list->head);
@@ -347,7 +350,7 @@ int LLIterDelete(LLIter iter, LLPayloadFreeFnPtr payload_free_function) {
   if (iter->list->num_elements == 1) {
     //payload_free_function(iter->cur_node->payload);
     //DestroyLinkedListNode(iter->cur_node);
-    DestroyLinkedList(iter->list, payload_free_function);
+    //DestroyLinkedList(iter->list, payload_free_function);
     DestroyLLIter(iter);
     return 0;
   }
@@ -355,6 +358,7 @@ int LLIterDelete(LLIter iter, LLPayloadFreeFnPtr payload_free_function) {
   if (iter->cur_node == iter->list->head) {
     LinkedListNode *cur = iter->cur_node;
     LLIterNext(iter);
+    iter->list->head = iter->cur_node;
     payload_free_function(cur->payload);
     DestroyLinkedListNode(cur);
     iter->cur_node->prev = NULL;
