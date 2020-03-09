@@ -44,12 +44,19 @@ int DestroyLinkedList(LinkedList list,
 
   // Step 2.
   // Free the payloads, as well as the nodes
+  if (list->head == NULL) {
+    list->tail = NULL;
+    free(list);
+    return 0;
+  }
   while (list->head != NULL) {
     LinkedListNode *cur = list->head;
     payload_free_function(cur->payload);
     list->head = list->head->next;
     DestroyLinkedListNode(cur);
   }
+  // payload_free_function(list->head->payload);
+  // DestroyLinkedListNode(list->head);
   list->head = NULL;
   list->tail = NULL;
   list->num_elements = 0;
@@ -333,6 +340,9 @@ int LLIterDelete(LLIter iter, LLPayloadFreeFnPtr payload_free_function) {
   // Be sure to call the payload_free_function to free the payload
   // the iterator is pointing to, and also free any LinkedList
   // data structure element as appropriate.
+  if (iter->list->num_elements == 0) {
+    return 1;
+  }
   // The list becomes empty after deleting.
   if (iter->list->num_elements == 1) {
     //payload_free_function(iter->cur_node->payload);
