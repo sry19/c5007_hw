@@ -11,7 +11,7 @@ When you are done, update this file with the following info:
     - http://cheezyworld.com/wp-content/uploads/2010/12/PlainGoogleQuickTestReferenceGuide1.pdf
     - https://batsov.com/articles/2011/11/25/emacs-tip-number-3-whitespace-cleanup/
 * What was your favorite part of this assignment? detailed guide
-* What was challenging about this assignment? understanding the relationship bwteen all parts
+* What was challenging about this assignment? understanding the relationship between all parts
 * How would you improve the assignment? adding more tests
 
 ## Files
