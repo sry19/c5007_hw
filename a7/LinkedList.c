@@ -348,9 +348,7 @@ int LLIterDelete(LLIter iter, LLPayloadFreeFnPtr payload_free_function) {
   }
   // The list becomes empty after deleting.
   if (iter->list->num_elements == 1) {
-    //payload_free_function(iter->cur_node->payload);
-    //DestroyLinkedListNode(iter->cur_node);
-    //DestroyLinkedList(iter->list, payload_free_function);
+    DestroyLinkedList(iter->list, payload_free_function);
     DestroyLLIter(iter);
     return 0;
   }
