@@ -1,7 +1,4 @@
-// Name: Ruoyun Sun
-// Course number: cs5007
-// Some methods were written by Ruoyun Sun on March 4th,
-// all methods were finished on March 9th
+// Some methods were written by Ruoyun Sun on March 4th
 
 // CS 5007, Northeastern University, Seattle
 // Summer 2019
@@ -47,24 +44,12 @@ int DestroyLinkedList(LinkedList list,
 
   // Step 2.
   // Free the payloads, as well as the nodes
-  if (list->head == NULL) {
-    list->tail = NULL;
-    free(list);
-    return 0;
-  }
   while (list->head != NULL) {
-    LinkedListNode *cur = list->head;
-    payload_free_function(cur->payload);
+    payload_free_function(list->head->payload);
+    LinkedListNode * cur = list->head;
     list->head = list->head->next;
     DestroyLinkedListNode(cur);
-    if (list->head != NULL) {
-      list->head->prev = NULL;
-    }
   }
-  list->head = NULL;
-  list->tail = NULL;
-  list->num_elements = 0U;
-  free(list);
     return 0;
 }
 
@@ -117,7 +102,6 @@ int InsertLinkedList(LinkedList list, void *data) {
   // typical case; list has >=1 elements
   list->head->prev = new_node;
   new_node->next = list->head;
-  new_node->prev = NULL;
   list->head = list->head->prev;
   list->num_elements++;
   return 0;
@@ -144,7 +128,6 @@ int AppendLinkedList(LinkedList list, void *data) {
     }
   list->tail->next = new_node;
   new_node->prev = list->tail;
-  new_node->next = NULL;
   list->tail = list->tail->next;
   list->num_elements++;
   return 0;
@@ -177,7 +160,6 @@ int PopLinkedList(LinkedList list, void **data) {
     *data = list->head->payload;
     list->head = list->head->next;
     DestroyLinkedListNode(list->head->prev);
-    list->head->prev = NULL;
     list->num_elements--;
     return 0;
 }
@@ -204,7 +186,6 @@ int SliceLinkedList(LinkedList list, void **data) {
     *data = list->tail->payload;
     list->tail = list->tail->prev;
     DestroyLinkedListNode(list->tail->next);
-    list->tail->next = NULL;
     list->num_elements--;
     return 0;
 }
@@ -344,12 +325,10 @@ int LLIterDelete(LLIter iter, LLPayloadFreeFnPtr payload_free_function) {
   // Be sure to call the payload_free_function to free the payload
   // the iterator is pointing to, and also free any LinkedList
   // data structure element as appropriate.
-  if (iter->list->num_elements == 0) {
-    return 1;
-  }
   // The list becomes empty after deleting.
   if (iter->list->num_elements == 1) {
-    DestroyLinkedList(iter->list, payload_free_function);
+    // DestroyLinkedListNode(iter->cur_node);
+    // DestroyLinkedList(iter->list, payload_free_function);
     DestroyLLIter(iter);
     return 0;
   }
@@ -357,7 +336,6 @@ int LLIterDelete(LLIter iter, LLPayloadFreeFnPtr payload_free_function) {
   if (iter->cur_node == iter->list->head) {
     LinkedListNode *cur = iter->cur_node;
     LLIterNext(iter);
-    iter->list->head = iter->cur_node;
     payload_free_function(cur->payload);
     DestroyLinkedListNode(cur);
     iter->cur_node->prev = NULL;
