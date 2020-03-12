@@ -1,4 +1,8 @@
 /*
+ *  Ruoyun Sun
+ *  March 12th
+ *  updated the main function in order to make sure we malloc successfully
+ *
  *  Adrienne Slaughter
  *  5007 Spr 2020
  *
@@ -39,9 +43,9 @@ int CompareMyThing(void* thing1, void* thing2) {
     return 0;
   }
   if (((MyThing*)thing1)->number < ((MyThing*)thing2)->number) {
-    return -1;  
+    return -1;
   } else {
-    return 1; 
+    return 1;
   }
 }
 
@@ -54,49 +58,52 @@ int main(int argc, char* argv[]) {
     printf("Creating a new LinkedList\n");
     // Allocate LL
     LinkedList list = CreateLinkedList();
-    
-    unsigned int num_items = 15; 
+
+    unsigned int num_items = 15;
     for (unsigned int i=0; i<num_items; i++) {
       MyThing *thing = (MyThing*)malloc(sizeof(MyThing));
       // TODO: Check that thing isn't NULL (out of memory)
+      if (thing == NULL) {
+        return 1;
+      }
       thing->number = i;
       thing->name = "Foobar";
       int result = InsertLinkedList(list, thing);
       Assert007(result == 0); // success!
-      Assert007(NumElementsInLinkedList(list) == i+1); 
+      Assert007(NumElementsInLinkedList(list) == i+1);
     }
-    
+
     // Create an iterator
     LLIter iter = CreateLLIter(list);
-    
-    // Iterate through the list and print out the items. 
+
+    // Iterate through the list and print out the items.
     while (LLIterHasNext(iter)) {
-        MyThing *item; 
+        MyThing *item;
         LLIterGetPayload(iter, (void*)&item);
         PrintMyThing(item);
         printf("\n");
         LLIterNext(iter);
     }
 
-    DestroyLLIter(iter); 
-    
+    DestroyLLIter(iter);
+
     // Since every element is inserted at the head,
     // the list is by default reverse sorted
     SortLinkedList(list, 1, &CompareMyThing);
-    
+
     MyThing* payload;
     Assert007(PopLinkedList(list, (void**)&payload) == 0);
     Assert007(payload->number == 0);
 
     // Now that I've popped it, I have to remember to free it
-    DestroyMyThing(payload); 
-    
+    DestroyMyThing(payload);
+
     // Create a new iter and print out again
-    iter = CreateLLIter(list); 
+    iter = CreateLLIter(list);
 
     // Iterate through the list
     while (LLIterHasNext(iter)) {
-        MyThing *item; 
+        MyThing *item;
         LLIterGetPayload(iter, (void*)&item);
         PrintMyThing(item);
         printf("\n");
@@ -105,7 +112,7 @@ int main(int argc, char* argv[]) {
 
     // Clean up
     DestroyLLIter(iter);
-    
+
         DestroyLinkedList(list, &DestroyMyThing);
-    printf("done. \n"); 
+    printf("done. \n");
 }
