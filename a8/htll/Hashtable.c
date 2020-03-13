@@ -1,4 +1,8 @@
 /*
+ *  Ruoyun Sun
+ *  March 12th
+ *  filles in the codes where marked TODO
+ *
  *  Adrienne Slaughter
  *  5007 Spr 2020
  *
@@ -29,7 +33,7 @@
 static void NullFree(void *freeme) { }
 
 static void FreeKVP(void *freeme) {
-  free(freeme); 
+  free(freeme);
 }
 
 Hashtable CreateHashtable(int num_buckets) {
@@ -72,21 +76,21 @@ void DestroyHashtable(Hashtable ht, ValueFreeFnPtr valueFreeFunction) {
   for (int i = 0; i < ht->num_buckets; i++) {
     LinkedList bucketlist = ht->buckets[i];
     HTKeyValuePtr nextKV;
-  
+
     // Free the values in the list; then free the list
     if (NumElementsInLinkedList(bucketlist) > 0) {
       LLIter list_iter = CreateLLIter(bucketlist);
 
-      LLIterGetPayload(list_iter, (void**)&nextKV); 
+      LLIterGetPayload(list_iter, (void**)&nextKV);
       valueFreeFunction(nextKV->value);
- 
+
       // Now loop through the rest
       while (LLIterHasNext(list_iter) == 1) {
         LLIterNext(list_iter);
-        LLIterGetPayload(list_iter, (void**)&nextKV); 
+        LLIterGetPayload(list_iter, (void**)&nextKV);
         valueFreeFunction(nextKV->value);
       }
-      DestroyLLIter(list_iter); 
+      DestroyLLIter(list_iter);
     }
     DestroyLinkedList(bucketlist, FreeKVP);
   }
@@ -101,7 +105,7 @@ int PutInHashtable(Hashtable ht,
                    HTKeyValue kvp,
                    HTKeyValue *old_key_value) {
   Assert007(ht != NULL);
-  
+
   int insert_bucket;
   LinkedList insert_chain;
 
@@ -127,7 +131,9 @@ int PutInHashtable(Hashtable ht,
   // but only if you think
   // callers will also want the functionality.
   // First check to see if bucket has 0 elements; if so we can insert it.
-  
+  ListNode *current = insert_chain->head;
+  while (current != NULL) {
+    
 
 }
 
@@ -138,9 +144,18 @@ int HashKeyToBucketNum(Hashtable ht, uint64_t key) {
 // -1 if not found; 0 if success
 int LookupInHashtable(Hashtable ht, uint64_t key, HTKeyValue *result) {
   Assert007(ht != NULL);
-  
+
   // STEP 2: Implement lookup
-  
+  int hash_key = HashKeyToBucketNum(ht, key);
+  LinkedList bucket = ht->buckets[hash_key];
+  ListNode *current = bucket->head;
+  while (current != NULL) {
+    if (current->payload->key == key) {
+      result = current->payload;
+      return 0;
+    }
+    current = current->next;
+  }
 
   // key was not found
   return -1;
@@ -154,11 +169,11 @@ int NumElemsInHashtable(Hashtable ht) {
 
 int RemoveFromHashtable(Hashtable ht, uint64_t key, HTKeyValuePtr junkKVP) {
   // STEP 3: Implement Remove
- 
+
 
   // key was not found
   return -1;
-  
+
 }
 
 
@@ -199,11 +214,11 @@ uint64_t FNVHashInt64(uint64_t makehash) {
 
 void ResizeHashtable(Hashtable ht) {
   Assert007(ht != NULL);
-  
+
   // Resize if the load factor is > 3.
   if (ht->num_elements < 3 * ht->num_buckets)
     return;
-  
+
   // This is the resize case.  Allocate a new hashtable,
   // iterate over the old hashtable, do the surgery on
   // the old hashtable record and free up the new hashtable
@@ -212,7 +227,7 @@ void ResizeHashtable(Hashtable ht) {
   // Give up if out of memory.
   if (newht == NULL)
     return;
-  
+
   // Loop through the old ht with an iterator,
   // inserting into the new HT.
   HTIter it = CreateHashtableIterator(ht);
@@ -224,22 +239,22 @@ void ResizeHashtable(Hashtable ht) {
 
   HTKeyValue item;
   HTIteratorGet(it, &item);
-  HTKeyValue old_kv; 
-  
+  HTKeyValue old_kv;
+
   if (PutInHashtable(newht, item, &old_kv) == 1) {
     // failure, free up everything, return.
     DestroyHashtableIterator(it);
     DestroyHashtable(newht, &NullFree);
     return;
   }
-  
+
   while (HTIteratorHasMore(it) != 0) {
     HTIteratorNext(it);
-    
-    HTKeyValue item; 
+
+    HTKeyValue item;
     HTIteratorGet(it, &item);
-    HTKeyValue old_kv; 
-    
+    HTKeyValue old_kv;
+
     if (PutInHashtable(newht, item, &old_kv) == 1) {
       // failure, free up everything, return.
       DestroyHashtableIterator(it);
@@ -269,7 +284,7 @@ void ResizeHashtable(Hashtable ht) {
 // Returns NULL on failure, non-NULL on success.
 HTIter CreateHashtableIterator(Hashtable table) {
   if (NumElemsInHashtable(table) == 0) {
-    return NULL; 
+    return NULL;
   }
   HTIter iter = (HTIter)malloc(sizeof(HTIterRecord));
   if (iter == NULL) {
@@ -278,7 +293,7 @@ HTIter CreateHashtableIterator(Hashtable table) {
   iter->ht = table;
   iter->which_bucket = 0;
   while (NumElementsInLinkedList(iter->ht->buckets[iter->which_bucket]) == 0) {
-    iter->which_bucket++; 
+    iter->which_bucket++;
   }
   iter->bucket_iter = CreateLLIter(iter->ht->buckets[iter->which_bucket]);
 
@@ -293,22 +308,22 @@ void DestroyHashtableIterator(HTIter iter) {
   free(iter);
 }
 
-// Moves to the next element; does not return. 
+// Moves to the next element; does not return.
 int HTIteratorNext(HTIter iter) {
   // Step 4: Implement HTIteratorNext
   // check to see if there more elements in the list iter
   // If not, destroy the current one,
   // increment which_bucket, and create a new iter
 
-  
-  return -1;  
+
+  return -1;
 }
 
 int HTIteratorGet(HTIter iter, HTKeyValuePtr dest) {
-  Assert007(iter != NULL); 
+  Assert007(iter != NULL);
   // Step 6 -- implement HTIteratorGet.
-  
-  return 0; 
+
+  return 0;
 }
 
 //  0 if there are no more elements.
@@ -316,22 +331,20 @@ int HTIteratorHasMore(HTIter iter) {
   if (iter->bucket_iter == NULL) {
     return 0;
   }
-  
+
   if (LLIterHasNext(iter->bucket_iter) == 1)
     return 1;
-  
+
   // No more in this iter; are there more buckets?
   int i = iter->which_bucket + 1;
   while (i < (iter->ht->num_buckets)) {
     // Make sure one of them has elements in it
     if ((iter->ht->buckets[i] != NULL) &&
         (NumElementsInLinkedList(iter->ht->buckets[i]) > 0)) {
-      return 1; 
+      return 1;
     }
     i++;
   }
-  
-  return 0;  
+
+  return 0;
 }
-
-
