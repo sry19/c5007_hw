@@ -131,10 +131,23 @@ int PutInHashtable(Hashtable ht,
   // but only if you think
   // callers will also want the functionality.
   // First check to see if bucket has 0 elements; if so we can insert it.
-  ListNode *current = insert_chain->head;
-  while (current != NULL) {
-    
-
+  HTKeyValue *result = NULL;
+  int state = LookupInHashtable(ht, kvp.key, result);
+  // Assert007(result != NULL);
+  if (state == -1) {
+    InsertLinkedList(insert_chain, &kvp);
+    ht->num_elements++;
+    return 0;
+  }
+  else {
+    if (result != &kvp) {
+      old_key_value = result;
+      RemoveFromHashtable(ht, kvp.key, result);
+      InsertLinkedList(insert_chain, &kvp);
+      return 2;
+    }
+    return 2;
+  }
 }
 
 int HashKeyToBucketNum(Hashtable ht, uint64_t key) {
@@ -148,15 +161,27 @@ int LookupInHashtable(Hashtable ht, uint64_t key, HTKeyValue *result) {
   // STEP 2: Implement lookup
   int hash_key = HashKeyToBucketNum(ht, key);
   LinkedList bucket = ht->buckets[hash_key];
-  ListNode *current = bucket->head;
-  while (current != NULL) {
-    if (current->payload->key == key) {
-      result = current->payload;
+  if (NumElementsInLinkedList(bucket) <= 0) {
+    return -1;
+  }
+  LLIter iter = CreateLLIter(bucket);
+  HTKeyValuePtr payload;
+  LLIterGetPayload(iter, (void**)&payload);
+  if (payload->key == key) {
+    result = payload;
+    DestroyLLIter(iter);
+    return 0;
+  }
+  while (LLIterHasNext(iter)) {
+    LLIterGetPayload(iter, (void**)&payload);
+    if (payload->key == key) {
+      result = payload;
+      DestroyLLIter(iter);
       return 0;
     }
-    current = current->next;
+    LLIterNext(iter);
   }
-
+  DestroyLLIter(iter);
   // key was not found
   return -1;
 }

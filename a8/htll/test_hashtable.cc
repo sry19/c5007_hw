@@ -65,7 +65,7 @@ TEST(Hashtable, Create) {
   DestroyHashtable(ht, NULL);
 
 }
-
+/*
 TEST(Hashtable, AddOneRemoveOne) {
     Hashtable ht = CreateHashtable(5);
     MyThing *thing1 = CreateMyThing(5, first);
@@ -471,7 +471,7 @@ TEST(HashtableIter, EmptyBuckets) {
   DestroyHashtable(ht, &FreeSomeNumPtr);
 }
 
-
+*/
 int main(int argc, char **argv) {
     ::testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();
