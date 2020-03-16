@@ -135,19 +135,20 @@ int PutInHashtable(Hashtable ht,
   int state = LookupInHashtable(ht, kvp.key, result);
   Assert007(state == -1);
   if (state == -1) {
-    InsertLinkedList(insert_chain, &kvp);
+    InsertLinkedList(insert_chain, (void*)&kvp);
     ht->num_elements++;
     return 0;
-  }
+  }/*
   else {
-    if (memcmp(result, &kvp) != 0) {
+    Assert007(sizeof(*result) == sizeof(kvp));
+    if (*result != kvp) {
       old_key_value = result;
       RemoveFromHashtable(ht, kvp.key, result);
-      InsertLinkedList(insert_chain, &kvp);
+      InsertLinkedList(insert_chain, (void*)&kvp);
       return 2;
     }
     return 2;
-  }
+    }*/
 }
 
 int HashKeyToBucketNum(Hashtable ht, uint64_t key) {
@@ -192,7 +193,7 @@ int NumElemsInHashtable(Hashtable ht) {
 }
 
 
-int RemoveFromHashtable(Hashtable ht, uint64_t key, HTKeyValuePtr junkKVP) {/*
+int RemoveFromHashtable(Hashtable ht, uint64_t key, HTKeyValuePtr junkKVP) {
   // STEP 3: Implement Remove
   HTKeyValue *result = NULL;
   if (LookupInHashtable(ht, key, result) == 0) {
@@ -207,7 +208,7 @@ int RemoveFromHashtable(Hashtable ht, uint64_t key, HTKeyValuePtr junkKVP) {/*
        ht->num_elements--;
        DestroyLLIter(iter);
        return 0;
-     }
+     }/*
      while (LLIterHasNext(iter)) {
        LLIterGetPayload(iter, (void**)&payload);
        if (payload == junkKVP) {
@@ -217,9 +218,9 @@ int RemoveFromHashtable(Hashtable ht, uint64_t key, HTKeyValuePtr junkKVP) {/*
          return 0;
       }
       LLIterNext(iter);
-    }
+      }*/
     DestroyLLIter(iter);
-    }*/
+    }
   // key was not found
   return -1;
 
@@ -373,7 +374,7 @@ int HTIteratorNext(HTIter iter) {
   DestroyLLIter(iter->bucket_iter);
   int i = iter->which_bucket + 1;
   while (i < (iter->ht->num_buckets)) {
-      if ((iter->ht->buckets[i] != NULL)·&&
+      if ((iter->ht->buckets[i] != NULL) &&
           (NumElementsInLinkedList(iter->ht->buckets[i]) > 0)) {
         iter->bucket_iter = CreateLLIter(iter->ht->buckets[i]);
         iter->which_bucket = i;
@@ -387,7 +388,7 @@ int HTIteratorNext(HTIter iter) {
 int HTIteratorGet(HTIter iter, HTKeyValuePtr dest) {
   Assert007(iter != NULL);
   // Step 6 -- implement HTIteratorGet.
-  LLIterGetPayload(iter->bucket_iter, *dest);
+  LLIterGetPayload(iter->bucket_iter, (void**)&dest);
   return 0;
 }
 
