@@ -65,7 +65,7 @@ TEST(Hashtable, Create) {
   DestroyHashtable(ht, NULL);
 
 }
-/*
+
 TEST(Hashtable, AddOneRemoveOne) {
     Hashtable ht = CreateHashtable(5);
     MyThing *thing1 = CreateMyThing(5, first);
@@ -89,7 +89,7 @@ TEST(Hashtable, AddOneRemoveOne) {
 
     DestroyHashtable(ht, &DestroyThing);
 }
-
+/*
 TEST(Hashtable, AddOneElemDestroy) {
     Hashtable ht = CreateHashtable(5);
     MyThing *thing1 = CreateMyThing(5, first);

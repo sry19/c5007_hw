@@ -385,3 +385,22 @@ int LLIterDelete(LLIter iter, LLPayloadFreeFnPtr payload_free_function) {
   iter->list->num_elements--;
   return 0;
 }
+
+int LLIterDeleteWithoutFree(LLIter iter) {
+  Assert007(iter != NULL);
+  if (iter->list->num_elements == 0) {
+    return 1;
+  }
+  if (iter->list->num_elements == 1) {
+    DestroyLinkedListNode(iter->cur_node);
+    return 0;
+  }
+  LinkedListNode *cur = iter->cur_node;
+  LinkedListNode *pre = iter->cur_node->prev;
+  LLIterNext(iter);
+  DestroyLinkedListNode(cur);
+  pre->next = iter->cur_node;
+  iter->cur_node->prev = pre;
+  iter->list->num_elements--;
+  return 0;
+}
