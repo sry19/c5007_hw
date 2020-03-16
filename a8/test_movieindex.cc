@@ -85,7 +85,7 @@ TEST(MovieIndex, AddMovieToIndex) {
   DestroyIndex(index);
 }
 
-
+/*
 TEST(MovieIndex, GetMovieSet) {
   // TODO: Implement this test.
 
@@ -101,7 +101,7 @@ TEST(MovieIndex, GetMovieSet) {
 
 }
 
-
+*/
 int main(int argc, char **argv) {
     ::testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();

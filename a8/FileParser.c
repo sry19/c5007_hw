@@ -28,7 +28,7 @@
 #include "FileParser.h"
 #include "Movie.h"
 #include "MovieIndex.h"
-#include "Constants.h"
+//#include "Constants.h"
 
 
 #define NUM_FIELDS 6
@@ -70,7 +70,20 @@ Movie* CreateMovieFromRow(char *data_row) {
   }
 
   // TODO(Student): Parse the row to create and populate a Movie.
-  
+  char *result = NULL;
+  char delims[] = "|";
+  result = strtok(data_row, delims);
+  mov->star_rating = CheckDouble(result);
+  result = strtok(NULL, delims);
+  mov->title = CheckAndAllocateString(result);
+  result = strtok(NULL, delims);
+  mov->content_rating = CheckAndAllocateString(result);
+  result = strtok(NULL, delims);
+  mov->genre = CheckAndAllocateString(result);
+  result = strtok(NULL, delims);
+  mov->duration = CheckInt(result);
+  result = strtok(NULL, delims);
+  mov->actor_list = CheckAndAllocateString(result);
   return mov;
 }
 

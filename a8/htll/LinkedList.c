@@ -43,7 +43,7 @@ LinkedList CreateLinkedList() {
 int DestroyLinkedList(LinkedList list,
                       LLPayloadFreeFnPtr payload_free_function) {
   Assert007(list != NULL);
-  Assert007(payload_free_function != NULL);
+  //  Assert007(payload_free_function != NULL);
 
   // Step 2.
   // Free the payloads, as well as the nodes

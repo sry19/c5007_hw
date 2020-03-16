@@ -25,6 +25,7 @@
 #include "htll/Hashtable.h"
 #include "Movie.h"
 #include "MovieSet.h"
+#include "Constants.h"
 
 void DestroyMovieSetWrapper(void *movie_set) {
   DestroyMovieSet((MovieSet)movie_set);
@@ -38,8 +39,8 @@ void toLower(char *str, int len) {
 
 Index BuildMovieIndex(LinkedList movies, enum IndexField field_to_index) {
   // TODO(Student): This 100 is a magic number. 
-  // Is there a better way to initialize this? If so, do it. 
-  Index movie_index = CreateHashtable(100);
+  // Is there a better way to initialize this? If so, do it.
+  Index movie_index = CreateHashtable(num_movie_buckets);
 
   LLIter iter = CreateLLIter(movies);
   Movie* cur_movie;
@@ -48,6 +49,10 @@ Index BuildMovieIndex(LinkedList movies, enum IndexField field_to_index) {
   // TODO: Check that there is at least one movie
   // What happens if there is not at least one movie?
   int result = AddMovieToIndex(movie_index, cur_movie, field_to_index);
+  if (result != 0) {
+    DestroyLLIter(iter);
+    return movie_index;
+  }
 
   while (LLIterHasNext(iter)) {
     LLIterNext(iter);
@@ -60,12 +65,13 @@ Index BuildMovieIndex(LinkedList movies, enum IndexField field_to_index) {
 
 
 int AddMovieActorsToIndex(Index index, Movie *movie) {
-  HTKeyValue kvp;
-  HTKeyValue old_kvp;
+  return 0; //
+  //  HTKeyValue kvp;
+  //  HTKeyValue old_kvp;
 
   // TODO(Student): Add movies to the index via actors. 
 
-  AddMovieToSet((MovieSet)kvp.value, movie);
+  //  AddMovieToSet((MovieSet)kvp.value, movie);
 }
 
 int AddMovieToIndex(Index index, Movie *movie, enum IndexField field) {
@@ -74,6 +80,12 @@ int AddMovieToIndex(Index index, Movie *movie, enum IndexField field) {
   }
 
   // TODO(Student): How do we add movies to the index? 
+  HTKeyValue kvp;
+  HTKeyValue old_kvp;
+  uint64_t key = ComputeKey(movie, field);
+  kvp.value = GetMovieSet(index, movie->title);
+  kvp.key = key;
+  PutInHashtable(index, kvp, &old_kvp);
 
   AddMovieToSet((MovieSet)kvp.value, movie);
 

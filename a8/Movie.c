@@ -38,6 +38,9 @@ void DestroyMovie(Movie* movie) {
   free(movie->title);
   free(movie->content_rating);
   free(movie->genre);
+  for (int i = 0; i < num_actors; i++) {
+    free(movie->actor_list[i]);
+  }
   free(movie->actor_list);
   free(movie);
 }
