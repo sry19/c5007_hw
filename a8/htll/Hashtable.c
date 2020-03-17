@@ -133,12 +133,12 @@ int PutInHashtable(Hashtable ht,
   // First check to see if bucket has 0 elements; if so we can insert it.
   HTKeyValue *result;
   int state = LookupInHashtable(ht, kvp.key, result);
-  Assert007(state == -1);
+  //Assert007(state == -1);
   if (state == -1) {
     InsertLinkedList(insert_chain, (void*)&kvp);
     ht->num_elements++;
     return 0;
-  }/*
+  }
   else {
     Assert007(sizeof(*result) == sizeof(kvp));
     if (*result != kvp) {
@@ -148,7 +148,7 @@ int PutInHashtable(Hashtable ht,
       return 2;
     }
     return 2;
-    }*/
+    }
 }
 
 int HashKeyToBucketNum(Hashtable ht, uint64_t key) {
