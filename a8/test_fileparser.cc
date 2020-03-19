@@ -72,7 +72,7 @@ char* MallocString(const char* str) {
   snprintf(cr, strlen(str), "%s", str);
   return cr; 
 }
-
+/*
 TEST(Movie, CreateWithMallocdData) {
   Movie* m1 = CreateMovie();
   m1->star_rating = 7.5;
@@ -96,6 +96,7 @@ TEST(Movie, CreateWithMallocdData) {
   DestroyMovie(m1);
 
 }
+*/
 
 TEST(Movie, CreateFromRow) {
   // Copying the string from a const to an array

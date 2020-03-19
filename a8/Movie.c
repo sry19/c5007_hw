@@ -49,7 +49,7 @@ void DestroyMovie(Movie* movie) {
   for (int i = 0; i < movie->num_actors; i++) {
     free(movie->actor_list[i]);
   }
-  //  free(movie->actor_list);
+  free(movie->actor_list);
 
   free(movie);
 }

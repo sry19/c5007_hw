@@ -60,13 +60,13 @@ TEST(MovieSet, AddOneMovie) {
   
   DestroyMovieSet(set);
 }
-/*
+
 TEST(MovieIndex, CreateDestroy) {
   Index index = CreateIndex();
   ASSERT_NE(index, nullptr);
   DestroyIndex(index);
 }
-
+/*
 TEST(MovieIndex, AddMovieToIndex) {
   // Copying the string from a const to an array
   // (to be more similar to the actual use case)
