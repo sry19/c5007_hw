@@ -111,8 +111,9 @@ TEST(Movie, CreateFromRow) {
   ASSERT_EQ(142, m1->duration);
   ASSERT_EQ(0, strcmp(m1->genre, "Crime"));
   //  ASSERT_EQ(-1, m1->actor_list); // TODO: Check actors
-            
-  
+  ASSERT_EQ(4, m1->num_actors);            
+  ASSERT_EQ(0, strcmp(m1->actor_list[0], "Tim"));
+  ASSERT_EQ(0, strcmp(m1->actor_list[3], "Gunton"));
   // TODO: Create from a improper row
 
   DestroyMovie(m1); 
