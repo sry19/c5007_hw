@@ -22,33 +22,13 @@ See Canvas for all the details!
 * ```MovieReport```: Responsible for printing out a report given a MovieIndex, to the command line or file.
 * ```MovieSet```: A set of Movies that are connected somehow: they have the same value for a given field. If the field is Year, all the movies in the set are made in the same year. It consists of a description and a LinkedList of Movies.
 
-## Tasks 
-
-The basic tasks you need to complete:
-
-* Modify main to accept flags on input and do the right thing.
-* Modify Movie struct to hold an array of genres
-* Modify MovieSet to ensure no duplicates of movies
-* Bulk up tests
-
-To do this, go through each file, and identify the "TODO" tags (listed below; generated with ```grep -n TODO *.c```). 
-
-### The TODOs and some more details
-
-To make sure you've implemented everything, you can run the following line of code: 
-
-```
-grep -nr TODO *
-```
-
-Note: some will require you to implement some code, while others will require you to answer a question in your writeup (README.md). 
 
 ## To run a single Google test
 
 Instead of running all the tests at once, you can run just a single test something like this: 
 
 ```
-./test_suite --gtest_filter=Hashtable.AddOneRemoveOne
+./test_fileparser --gtest_filter=FileParser.CreateMovieFromRow
 ```
 
-Here, only the ```Hashtable.AddOneRemoveOne``` test will run. 
+Here, only the ```FileParser.CreateMovieFromRow``` test will run. 

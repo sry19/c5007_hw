@@ -94,9 +94,13 @@ Index CreateIndex();
 /**
  * Helper function to compute the key from a string, given
  * a Movie and which field is to be used as the key.
+ * If the IndexField is Actor, then which_actor indicates which of
+ * the actors to use compute the key from.
+ *
+ * which_actor is ignored if field is not Actor.  
  *
  * RETURNS: uint64_t to be used as a key in the MovieIndex.
  */
-uint64_t ComputeKey(Movie* movie, enum IndexField);
+uint64_t ComputeKey(Movie* movie, enum IndexField field, int which_actor);
 
 #endif

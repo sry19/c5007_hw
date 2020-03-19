@@ -25,7 +25,6 @@
 #include "htll/Hashtable.h"
 #include "Movie.h"
 #include "MovieSet.h"
-#include "Constants.h"
 
 void DestroyMovieSetWrapper(void *movie_set) {
   DestroyMovieSet((MovieSet)movie_set);
@@ -38,22 +37,16 @@ void toLower(char *str, int len) {
 }
 
 Index BuildMovieIndex(LinkedList movies, enum IndexField field_to_index) {
-  // TODO(Student): This 100 is a magic number. 
-  // Is there a better way to initialize this? If so, do it.
-  Index movie_index = CreateHashtable(num_movie_buckets);
+  Index movie_index = CreateIndex();
 
+  // STEP 4(Student): Check that there is at least one movie
+  // What happens if there is not at least one movie?
   LLIter iter = CreateLLIter(movies);
   Movie* cur_movie;
   LLIterGetPayload(iter, (void**)&cur_movie);
 
-  // TODO: Check that there is at least one movie
-  // What happens if there is not at least one movie?
   int result = AddMovieToIndex(movie_index, cur_movie, field_to_index);
-  if (result != 0) {
-    DestroyLLIter(iter);
-    return movie_index;
-  }
-
+  
   while (LLIterHasNext(iter)) {
     LLIterNext(iter);
     LLIterGetPayload(iter, (void**)&cur_movie);
@@ -65,13 +58,14 @@ Index BuildMovieIndex(LinkedList movies, enum IndexField field_to_index) {
 
 
 int AddMovieActorsToIndex(Index index, Movie *movie) {
-  return 0; //
-  //  HTKeyValue kvp;
-  //  HTKeyValue old_kvp;
+  HTKeyValue kvp;
+  HTKeyValue old_kvp;
 
-  // TODO(Student): Add movies to the index via actors. 
+  // STEP 6(Student): Add movies to the index via actors. 
+  //  Similar to STEP 5.
 
-  //  AddMovieToSet((MovieSet)kvp.value, movie);
+  
+  AddMovieToSet((MovieSet)kvp.value, movie);
 }
 
 int AddMovieToIndex(Index index, Movie *movie, enum IndexField field) {
@@ -79,44 +73,23 @@ int AddMovieToIndex(Index index, Movie *movie, enum IndexField field) {
     return AddMovieActorsToIndex(index, movie);
   }
 
-  // TODO(Student): How do we add movies to the index? 
   HTKeyValue kvp;
-  HTKeyValue old_kvp;
-  uint64_t key = ComputeKey(movie, field);
-  char rating_str[10];
+  kvp.key = ComputeKey(movie, field, 0);
+  
+  // STEP 5(Student): How do we add movies to the index?
+  // The general idea: 
+  // Check hashtable to see if relevant MovieSet already exists
+  // If it does, grab access to it from the hashtable
+  // If it doesn't, create the new MovieSet and get the pointer to it
+  // Put the new MovieSet into the Hashtable.
 
-  switch (field) {
-    case Genre:
-       kvp.value = GetMovieSet(index, movie->genre);
-       if (kvp.value == NULL) {
-           kvp.value = CreateMovieSet(movie->genre);
-         }
-       break;
-    case StarRating:
-       snprintf(rating_str, 10, "%f", movie->star_rating);
-       kvp.value = GetMovieSet(index, (char*)rating_str);
-       if (kvp.value == NULL) {
-         kvp.value = CreateMovieSet((char*)rating_str);
-       }
-       break;
-    case ContentRating:
-       kvp.value = GetMovieSet(index, movie->content_rating);
-       if (kvp.value == NULL) {
-           kvp.value = CreateMovieSet(movie->content_rating);
-         }
-       break;
-    case Actor:
-       break;
-  }
-  kvp.key = key;
-
+  // After we either created or retrieved the MovieSet from the Hashtable: 
   AddMovieToSet((MovieSet)kvp.value, movie);
-  PutInHashtable(index, kvp, &old_kvp);
 
   return 0;
 }
 
-uint64_t ComputeKey(Movie* movie, enum IndexField which_field) {
+uint64_t ComputeKey(Movie* movie, enum IndexField which_field, int which_actor) {
   char rating_str[10];
   switch (which_field) {
     case Genre:
@@ -128,24 +101,17 @@ uint64_t ComputeKey(Movie* movie, enum IndexField which_field) {
       return FNVHash64((unsigned char*)movie->content_rating,
                        strlen(movie->content_rating));
     case Actor:
+      if (which_actor < movie->num_actors) {
+        return FNVHash64((unsigned char*)movie->actor_list[which_actor],
+                         strlen(movie->actor_list[which_actor]));
+      }
       break;
   }
   return -1u;
 }
 
-MovieSet GetMovieSet(Index index, const char *term) {
-  HTKeyValue kvp;
-  char lower[strlen(term)+1];
-  snprintf(lower, strlen(term) + 1, "%s", term);
-  toLower(lower, strlen(lower));
-  int result = LookupInHashtable(index, FNVHash64((unsigned char*)lower,
-                                                  (unsigned int)strlen(lower)), &kvp);
-  if (result < 0) {
-    printf("term couldn't be found: %s \n", term);
-    return NULL;
-  }
-  return (MovieSet)kvp.value;
-}
+// Removed for simplicity
+//MovieSet GetMovieSet(Index index, const char *term){}
 
 int DestroyIndex(Index index) {
   DestroyHashtable(index, &DestroyMovieSetWrapper);

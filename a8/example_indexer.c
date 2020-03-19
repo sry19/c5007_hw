@@ -35,10 +35,10 @@ void DestroyNothing(void* thing) {
 }
 
 int main(int argc, char* argv[]) {
-  // TODO(Student): Check args, do the right thing. 
-
+  // STEP 8(Student): Check args, do the right thing. 
+  char* filename; 
   LinkedList movie_list  = ReadFile(filename);
-  Index index; // TODO(Student): Create this properly. 
+  Index index; // STEP 9(Student): Create the index properly. 
 
   PrintReport(index);
   DestroyLinkedList(movie_list, &DestroyNothing);

@@ -206,5 +206,4 @@ int LLIterDelete(LLIter iter, LLPayloadFreeFnPtr payload_free_function);
 //   not to the inserted node.
 int LLIterInsertBefore(LLIter iter, void* payload);
 
-int LLIterDeleteWithoutFree(LLIter iter);
 #endif  // LINKEDLIST_H

@@ -19,7 +19,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-
 #include "Movie.h"
 
 
@@ -30,11 +29,19 @@ Movie* CreateMovie() {
     return NULL;
   }
 
+  mov->title = NULL;
+  mov->star_rating = 0;
+  mov->content_rating = NULL;
+  mov->genre = NULL;
+  mov->duration = 0;
+  mov->actor_list = NULL;
+  mov->num_actors = 0;
+
   return mov;
 }
 
 void DestroyMovie(Movie* movie) {
-  // TODO(Student): Make sure the movie is destroyed properly.
+  // STEP 1(Student): Make sure the movie is destroyed properly. 
   free(movie->title);
   free(movie->content_rating);
   free(movie->genre);
@@ -44,3 +51,5 @@ void DestroyMovie(Movie* movie) {
   free(movie->actor_list);
   free(movie);
 }
+
+

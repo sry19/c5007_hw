@@ -28,8 +28,6 @@
 #include "FileParser.h"
 #include "Movie.h"
 #include "MovieIndex.h"
-//#include "Constants.h"
-
 
 #define NUM_FIELDS 6
 #define MAX_ROW_LENGTH 1000
@@ -40,7 +38,6 @@ char* CheckAndAllocateString(char* token) {
     return NULL;
   } else {
     char *out = (char *) malloc((strlen(token) + 1) * sizeof(char));
-    // TODO(adrienne): remove when confirmed    strcpy(out, token);
     snprintf(out, strlen(token) + 1, "%s", token);
     return out;
   }
@@ -69,21 +66,9 @@ Movie* CreateMovieFromRow(char *data_row) {
     return NULL;
   }
 
-  // TODO(Student): Parse the row to create and populate a Movie.
-  char *result = NULL;
-  char delims[] = "|";
-  result = strtok(data_row, delims);
-  mov->star_rating = CheckDouble(result);
-  result = strtok(NULL, delims);
-  mov->title = CheckAndAllocateString(result);
-  result = strtok(NULL, delims);
-  mov->content_rating = CheckAndAllocateString(result);
-  result = strtok(NULL, delims);
-  mov->genre = CheckAndAllocateString(result);
-  result = strtok(NULL, delims);
-  mov->duration = CheckInt(result);
-  result = strtok(NULL, delims);
-  mov->actor_list = CheckAndAllocateString(result);
+  // STEP 2(Student): Parse the row to create and populate a Movie.
+  // Use the strtok 
+  
   return mov;
 }
 

@@ -25,34 +25,84 @@
 extern "C" {
   #include "./FileParser.h"
   #include "htll/LinkedList.h"
-  #include "MovieIndex.h"
   #include "Movie.h"
 }
 
-const char* movie_row_A = "9.3|The Shawshank Redemption|R|Crime|142|[u'Tim Robbins', u'Morgan Freeman', u'Bob Gunton']";
-const char* movie_row_B = "7.4|Back to the Future Part III|PG|Adventure|118|'Michael J. Fox' 'Christopher Lloyd' 'Mary Steenburgen'";
+const char* movie_row_A = "9.3|The Shawshank Redemption|R|Crime|142|Tim Robbins,Morgan Freeman,Bob Gunton";
+const char* movie_row_B = "7.4|Back to the Future Part III|PG|Adventure|118|Michael J. Fox,Christopher Lloyd,Mary Steenburgen";
 
 void DestroyLLMovie(void *payload) {
   DestroyMovie((Movie*)payload);
 }
 
-TEST(FileParser, ReadGoodFile) {
-  // read a file
-  LinkedList movie_list  = ReadFile(const_cast<char *>("data/test"));
+// TestSuiteName TestCaseName
+TEST(Movie, CreateDestroyMovie) {
+  Movie* m1 = CreateMovie();
+  ASSERT_TRUE(m1 != NULL);
+  
+  ASSERT_EQ(m1->content_rating, nullptr);
+  ASSERT_EQ(m1->genre, nullptr);
+  ASSERT_EQ(m1->actor_list, nullptr);
+  ASSERT_EQ(m1->star_rating, 0);
+  ASSERT_EQ(m1->duration, 0);
+  ASSERT_EQ(m1->num_actors, 0);
+  ASSERT_EQ(m1->title, nullptr);
 
-  ASSERT_EQ(5u, NumElementsInLinkedList(movie_list));
-
-  DestroyLinkedList(movie_list, &DestroyLLMovie);
+  DestroyMovie(m1);
 }
 
+TEST(Movie, CreateManualAndDestroyMovie) {
+  Movie* m1 = CreateMovie();
+  m1->star_rating = 7.5;
+  m1->content_rating = "PG";
+  m1->title = "Sleepless in Seattle";
+  m1->duration = 125;
+  m1->genre = "RomCom";
+  m1->num_actors = 2;
+  char* actors[2] = {};
+  actors[0] = "Tom Hanks";
+  actors[1] = "Meg Ryan";
+  m1->actor_list = actors;
+
+  DestroyMovie(m1);
+}
+
+char* MallocString(const char* str) {
+  char* cr = (char*)malloc(sizeof(char) * strlen(str) + 1);
+  snprintf(cr, strlen(str), "%s", str);
+  return cr; 
+}
+
+TEST(Movie, CreateWithMallocdData) {
+  Movie* m1 = CreateMovie();
+  m1->star_rating = 7.5;
+  m1->content_rating = MallocString("PG");
+  m1->title = MallocString("Sleepless in Seattle");
+  m1->duration = 125;
+  m1->genre = MallocString("RomCom");
+  m1->num_actors = 2;
+  char* actors[2] = {};
+  actors[0] = MallocString("Tom Hanks");
+  actors[1] = MallocString("Meg Ryan");
+  m1->actor_list = actors;
+
+  ASSERT_NE(m1->content_rating, nullptr);
+  ASSERT_NE(m1->title, nullptr);
+  ASSERT_NE(m1->genre, nullptr);
+  ASSERT_NE(m1->actor_list[0], nullptr);
+  ASSERT_NE(m1->actor_list[1], nullptr);
+  ASSERT_NE(m1->actor_list, nullptr);
+  
+  DestroyMovie(m1);
+
+}
 
 TEST(Movie, CreateFromRow) {
   // Copying the string from a const to an array
   // (to be more similar to the actual use case)
   char row[1000];
-  strcpy(row, movie_row_A);
+  snprintf(row, 1000, "%s", movie_row_A);
   // Create from a "good" row
-
 
   Movie* m1 = CreateMovieFromRow(row);
   ASSERT_EQ(9.3, m1->star_rating);
@@ -69,6 +119,15 @@ TEST(Movie, CreateFromRow) {
   
 }
 
+TEST(FileParser, ReadGoodFile) {
+  // read a file
+  LinkedList movie_list  = ReadFile(const_cast<char *>("data/test"));
+
+  ASSERT_EQ(5u, NumElementsInLinkedList(movie_list));
+
+  DestroyLinkedList(movie_list, &DestroyLLMovie);
+}
+
 TEST(FileParser, ReadNonexistentFile) {
   // try to read a non-existent file
   LinkedList movie_list = ReadFile(const_cast<char *>("bogus/file"));
@@ -76,25 +135,15 @@ TEST(FileParser, ReadNonexistentFile) {
 
 }
 
-
 TEST(FileParser, ReadBinaryFile) {
   // try to read a file that contains non-ASCII text
   LinkedList movie_list;
 
-  movie_list = ReadFile(const_cast<char *>("./movies_small/libhtll.a"));
+  movie_list = ReadFile(const_cast<char *>("htll/libhtll.a"));
   ASSERT_TRUE(movie_list == NULL);
 }
 
-TEST(FileParser, BuildMovieIndex) {
-  LinkedList movie_list  = ReadFile(const_cast<char *>("data/test"));
 
-  ASSERT_EQ(5u, NumElementsInLinkedList(movie_list));
-
-  Index index = BuildMovieIndex(movie_list, Genre);
-
-  // Do a few spot checks.
-  DestroyIndex(index);
-}
 
 int main(int argc, char **argv) {
     ::testing::InitGoogleTest(&argc, argv);

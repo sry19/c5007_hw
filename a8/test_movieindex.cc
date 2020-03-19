@@ -33,19 +33,39 @@ extern "C" {
   #include <string.h>
 }
 
-const char* movie_row_A = "9.3|The Shawshank Redemption|R|Crime|142|[u'Tim Robbins', u'Morgan Freeman', u'Bob Gunton']";
-const char* movie_row_B = "7.4|Back to the Future Part III|PG|Adventure|118|'Michael J. Fox' 'Christopher Lloyd' 'Mary Steenburgen'";
+const char* movie_row_A = "9.3|The Shawshank Redemption|R|Crime|142|Tim Robbins,Morgan Freeman,Bob Gunton";
+const char* movie_row_B = "7.4|Back to the Future Part III|PG|Adventure|118|Michael J. Fox,Christopher Lloyd,Mary Steenburgen";
 
 void DestroyLLMovie(void *payload) {
   DestroyMovie((Movie*)payload);
 }
 
-TEST(MovieIndex, CreateDestroy) {
-  Index index = CreateIndex();
-
-  DestroyIndex(index);
+TEST(MovieSet, CreateDestroy) {
+  MovieSet set = CreateMovieSet("My test set");
+  ASSERT_NE(set, nullptr);
+  DestroyMovieSet(set);
 }
 
+TEST(MovieSet, AddOneMovie) {
+  MovieSet set = CreateMovieSet("My test set");
+  ASSERT_NE(set, nullptr);
+  ASSERT_EQ(NumElementsInLinkedList(set->movies), 0);
+
+  char row[1000];
+  strcpy(row, movie_row_A);
+  MoviePtr movie = CreateMovieFromRow(row);
+  int res = AddMovieToSet(set, movie);
+  ASSERT_EQ(res, 0);
+  ASSERT_EQ(NumElementsInLinkedList(set->movies), 1);
+  
+  DestroyMovieSet(set);
+}
+
+TEST(MovieIndex, CreateDestroy) {
+  Index index = CreateIndex();
+  ASSERT_NE(index, nullptr);
+  DestroyIndex(index);
+}
 
 TEST(MovieIndex, AddMovieToIndex) {
   // Copying the string from a const to an array
@@ -70,38 +90,29 @@ TEST(MovieIndex, AddMovieToIndex) {
 
   // Try to insert movie again
   AddMovieToIndex(index, m1, ContentRating);
-  // TODO: What's supposed to happen here?
-  // Write code to check it.
 
   // Add another movie to the index (same IndexType)
   AddMovieToIndex(index, m2, ContentRating);
-
-  // Add another movie (different IndexType)
-  // TODO: Check result is correct.
-
-  PrintReport(index);
 
   // Destroy movie index
   DestroyIndex(index);
 }
 
-/*
-TEST(MovieIndex, GetMovieSet) {
-  // TODO: Implement this test.
+TEST(MovieIndex, BuildMovieIndexFromFile) {
+  LinkedList movie_list  = ReadFile(const_cast<char *>("data/test"));
 
-  // Create a movie index
+  ASSERT_EQ(5u, NumElementsInLinkedList(movie_list));
 
-  // Add a bunch of movies with different vals for the index
+  Index index = BuildMovieIndex(movie_list, Genre);
 
-  // Get the set
-
-  // Check that the movies are all in the set
-
-  // Destroy the movie index
-
+  // Do a few spot checks.
+  // E.g., Pull out a MovieSet from the Hashtable;
+  // Check to see if the set has expected number of movies,
+  // a particular movie, etc. 
+  DestroyIndex(index);
 }
 
-*/
+
 int main(int argc, char **argv) {
     ::testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();

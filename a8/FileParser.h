@@ -23,14 +23,12 @@
 #include "MovieIndex.h"
 
 
-
 /**
  * Reads in the specified file with a given structure and reads in each row,
  * creating a Movie from each row.
  *
- * Expected sample row:
- * id       |type |Title1   |Title2   |IsAdult|Year|?|?|Genres
- * tt0003609|movie|Alexandra|Alexandra|0      |1915|-|-|-
+ * star_rating|title|content_rating|genre|duration|actors_list
+ * 7.4|Back to the Future Part III|PG|Adventure|118|Michael J. Fox,Christopher Lloyd,Mary Steenburgen
  *
  * Fields are separated by a pipe (|), and a dash (-) specifies an empty value.
  *
@@ -45,12 +43,18 @@ LinkedList ReadFile(char* filename);
  * Given a char* that is a row in the data file,
  * Creates and populates a Movie struct accordingly.
  * Expected sample row:
- * id       |type |Title1   |Title2   |IsAdult|Year|?|?|Genre
- * tt0003609|movie|Alexandra|Alexandra|0      |1915|-|-|-
+ *
+ * star_rating|title|content_rating|genre|duration|actors_list
+ * 7.4|Back to the Future Part III|PG|Adventure|118|Michael J. Fox,Christopher Lloyd,Mary Steenburgen
  *
  * Fields are separated by a pipe (|), and a dash (-) specifies an empty value.
  *
- * Returns: A pointer to a Movie struct that has been allocated and populated.
+ * Assumes that, where appropriate, new strings and arrays will be malloc'd for the
+ * new Movie to point at. 
+ *
+ * Returns: A pointer to a Movie struct that has been allocated and populated
+ *    with the values in the dataRow.
+ * 
  */
 
 Movie* CreateMovieFromRow(char *dataRow);
