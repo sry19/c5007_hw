@@ -56,5 +56,9 @@ MovieSet CreateMovieSet(char *desc) {
 void DestroyMovieSet(MovieSet set) {
   // TODO(Student): What else to do to clean up a MovieSet?
   // Free set
+  if (set->desc != NULL) {
+    free(set->desc);
+  }
+  DestroyLinkedList(set->movies, &DestroyMovieWrapper);
   free(set);
 }

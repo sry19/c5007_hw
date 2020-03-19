@@ -60,7 +60,7 @@ TEST(MovieSet, AddOneMovie) {
   
   DestroyMovieSet(set);
 }
-
+/*
 TEST(MovieIndex, CreateDestroy) {
   Index index = CreateIndex();
   ASSERT_NE(index, nullptr);
@@ -112,7 +112,7 @@ TEST(MovieIndex, BuildMovieIndexFromFile) {
   DestroyIndex(index);
 }
 
-
+*/
 int main(int argc, char **argv) {
     ::testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();
