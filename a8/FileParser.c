@@ -67,8 +67,35 @@ Movie* CreateMovieFromRow(char *data_row) {
   }
 
   // STEP 2(Student): Parse the row to create and populate a Movie.
-  // Use the strtok 
-  
+  // Use the strtok
+  char* token = strtok(data_row, "|");
+  mov->star_rating = CheckDouble(token);
+  token = strtok(NULL, "|");
+  mov->title = CheckAndAllocateString(token);
+  token = strtok(NULL, "|");
+  mov->content_rating = CheckAndAllocateString(token);
+  token = strtok(NULL, "|");
+  mov->genre = CheckAndAllocateString(token);
+  token = strtok(NULL, "|");
+  mov->duration = CheckInt(token);
+  token = strtok(NULL, "|");
+  char c;
+  for (int i=0; (c=token[i])!='\0';i++) {
+      if (c == ' ') {
+        mov->num_actors++;
+      }
+    }
+  mov->num_actors++;
+  const int size = mov->num_actors;
+  //char* actors = new char[size];
+  mov->actor_list = (char**)malloc(sizeof(char*)*size);
+  char* actor_name = strtok(token, " ");
+  mov->actor_list[0] = CheckAndAllocateString(actor_name);
+  for (int i=1; i<mov->num_actors;i++) {
+    actor_name = strtok(NULL, " ");
+    mov->actor_list[i] = CheckAndAllocateString(actor_name);
+  }
+  //mov->actor_list = actors;
   return mov;
 }
 
