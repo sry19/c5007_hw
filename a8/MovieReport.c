@@ -45,7 +45,31 @@ void PrintReport(Index index) {
 }
 
 void OutputMovieSet(MovieSet movie_set) {
-  // STEP 7(Student): Print the MovieSet to the terminal. 
+  // STEP 7(Student): Print the MovieSet to the terminal.
+  printf("indexType: %s\n", movie_set->desc);
+  printf("%d items\n", NumElementsInLinkedList(movie_set->movies));
+  if (NumElementsInLinkedList(movie_set->movies) == 0) {
+    return;
+  }
+  if (NumElementsInLinkedList(movie_set->movies) == 1) {
+    LLIter iter = CreateLLIter(movie_set->movies);
+    Movie* payload = NULL;
+    LLIterGetPayload(iter, (void**)&payload);
+    printf("    %s\n", payload->title);
+    DestroyLLIter(iter);
+    return;
+  }
+  LLIter iter = CreateLLIter(movie_set->movies);
+  Movie* payload = NULL;
+  LLIterGetPayload(iter, (void**)&payload);
+  printf("    %s\n", payload->title);
+  while (LLIterHasNext(iter)) {
+    LLIterNext(iter);
+    LLIterGetPayload(iter, (void**)&payload);
+    printf("    %s\n", payload->title);
+  }
+  DestroyLLIter(iter);
+  return;
 }
 
 
