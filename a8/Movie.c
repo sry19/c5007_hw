@@ -52,6 +52,7 @@ void DestroyMovie(Movie* movie) {
   free(movie->actor_list);
 
   free(movie);
+  movie = NULL;
 }
 
 

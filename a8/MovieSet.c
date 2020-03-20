@@ -26,6 +26,7 @@
 
 void DestroyMovieWrapper(void *a_movie) {
   DestroyMovie((Movie*)a_movie);
+  a_movie = NULL;
 }
 
 int AddMovieToSet(MovieSet set, Movie *movie) {
@@ -63,7 +64,7 @@ void DestroyMovieSet(MovieSet set) {
   if (set->desc != NULL) {
     free(set->desc);
   }
-  DestroyLinkedList(set->movies, &DoNothing);//&DestroyMovieWrapper);
+  DestroyLinkedList(set->movies, &DoNothing);//&DestroyMovieWrapper
   set->movies = NULL;
   free(set);
 }
