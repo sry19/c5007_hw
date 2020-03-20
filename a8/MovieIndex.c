@@ -109,10 +109,10 @@ int AddMovieToIndex(Index index, Movie *movie, enum IndexField field) {
     return 0;
   }
   */
-  HTKeyValue *result = NULL;
+  HTKeyValue result;
   HTKeyValue *old_kvp = NULL;
-  if (LookupInHashtable(index, kvp.key, result) == 0) {
-    MovieSet movieset = result->value;
+  if (LookupInHashtable(index, kvp.key, &result) == 0) {
+    MovieSet movieset = result.value;
     LinkedList list = movieset->movies;
     LLIter iter = CreateLLIter(list);
     void* old_kv;
@@ -130,7 +130,7 @@ int AddMovieToIndex(Index index, Movie *movie, enum IndexField field) {
           }
       }
     DestroyLLIter(iter);
-    AddMovieToSet((MovieSet)result->value, movie);
+    AddMovieToSet((MovieSet)result.value, movie);
     return 0;
   }
   MovieSet movieset = CreateMovieSet(desc);
