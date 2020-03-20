@@ -62,15 +62,50 @@ Index BuildMovieIndex(LinkedList movies, enum IndexField field_to_index) {
 
 
 int AddMovieActorsToIndex(Index index, Movie *movie) {
-  HTKeyValue kvp;
-  HTKeyValue old_kvp;
 
   // STEP 6(Student): Add movies to the index via actors. 
   //  Similar to STEP 5.
-
-  
-  AddMovieToSet((MovieSet)kvp.value, movie);
+  for (int i = 0; i < movie->num_actors; i++) {
+    HTKeyValue kvp;
+    kvp.key = ComputeKey(movie, Actor, i);
+    HTKeyValue result;
+    HTKeyValue *old_kvp = NULL;
+    if (LookupInHashtable(index, kvp.key, &result) == 0) {
+      MovieSet movieset = result.value;
+      LinkedList list = movieset->movies;
+      LLIter iter = CreateLLIter(list);
+      void* old_kv;
+      LLIterGetPayload(iter, &old_kv);
+      if ((Movie*)old_kv == movie) {
+        DestroyLLIter(iter);
+        continue;
+      }
+      int flag = 0;
+      while (LLIterHasNext(iter)) {
+        LLIterNext(iter);
+        LLIterGetPayload(iter, &old_kv);
+        if ((Movie*)old_kv == movie) {
+          DestroyLLIter(iter);
+          flag = 1;
+          break;
+        }
+      }
+      if (flag == 0) {
+        DestroyLLIter(iter);
+        AddMovieToSet((MovieSet)result.value, movie);
+      }
+    }
+    else {
+      char * desc = movie->actor_list[i];
+      MovieSet movieset = CreateMovieSet(desc);
+      AddMovieToSet(movieset, movie);
+      kvp.value = movieset;
+      PutInHashtable(index, kvp, old_kvp);
+    }
+  }
+  return 0;
 }
+
 
 int AddMovieToIndex(Index index, Movie *movie, enum IndexField field) {
   if (field == Actor) {
