@@ -86,9 +86,54 @@ int AddMovieToIndex(Index index, Movie *movie, enum IndexField field) {
   // If it does, grab access to it from the hashtable
   // If it doesn't, create the new MovieSet and get the pointer to it
   // Put the new MovieSet into the Hashtable.
+  char *desc;
+  if (field == Genre) {
+    desc = movie->genre;
+  }
+  if (field == StarRating) {
+    char rating_str[10];
+    snprintf(rating_str, 10, "%f", movie->star_rating);
+    desc = rating_str;
+  }
+  if (field == ContentRating) {
+    desc = movie->content_rating;
+  }
+  int bucket_num = HashKeyToBucketNum(index, kvp.key);
+  LinkedList bucket = index->buckets;
+  if (NumElementsInLinkedList(bucket) == 0) {
+    MovieSet movieset = CreateMovieSet(desc);
+    AddMovieToSet(movieset, movie);
+    kvp.value = movieset;
+    InsertLinkedList(bucket, &kvp);
+    return 0;
+  }
+  
 
+  LLIter iter = CreateLLIter(bucket);
+
+  HTKeyValue old_kv;
+  LLIterGetPayload(iter, (void**)&old_kv);
+  if (old_kv.key == kvp.key) {
+    AddMovieToSet((MovieSet)old_kv.value, movie);
+    DestroyLLIter(iter);
+    return 0;
+  }
+  while (LLIterHasNext(iter)) {
+    LLIterNext(iter);
+    LLIterGetPayload(iter, (void**)&old_kv);
+    if (old_kv.key == kvp.key) {
+      AddMovieToSet((MovieSet)old_kv.value, movie);
+      DestroyLLIter(iter);
+      return 0;
+    }
+  }
+  MovieSet movieset = CreateMovieSet(desc);
+  AddMovieToSet(movieset, movie);
+  kvp.value = movieset;
+  InsertLinkedList(bucket, &kvp);
+  DestroyLLIter(iter);
   // After we either created or retrieved the MovieSet from the Hashtable: 
-  AddMovieToSet((MovieSet)kvp.value, movie);
+  //AddMovieToSet((MovieSet)kvp.value, movie);
 
   return 0;
 }

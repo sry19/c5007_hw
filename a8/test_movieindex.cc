@@ -66,7 +66,7 @@ TEST(MovieIndex, CreateDestroy) {
   ASSERT_NE(index, nullptr);
   DestroyIndex(index);
 }
-/*
+
 TEST(MovieIndex, AddMovieToIndex) {
   // Copying the string from a const to an array
   // (to be more similar to the actual use case)
@@ -112,7 +112,7 @@ TEST(MovieIndex, BuildMovieIndexFromFile) {
   DestroyIndex(index);
 }
 
-*/
+
 int main(int argc, char **argv) {
     ::testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();
