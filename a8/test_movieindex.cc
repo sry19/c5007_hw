@@ -84,7 +84,7 @@ TEST(MovieIndex, AddMovieToIndex) {
   AddMovieToIndex(index, m1, ContentRating);
 
   // Check that movie is in index
-
+  
   // Check size/num elements (should be num of types, not of movies)
   ASSERT_EQ(NumElemsInHashtable(index), 1);
 
@@ -93,11 +93,11 @@ TEST(MovieIndex, AddMovieToIndex) {
 
   // Add another movie to the index (same IndexType)
   AddMovieToIndex(index, m2, ContentRating);
-
+  ASSERT_EQ(NumElemsInHashtable(index), 2);
   // Destroy movie index
   DestroyIndex(index);
 }
-
+/*
 TEST(MovieIndex, BuildMovieIndexFromFile) {
   LinkedList movie_list  = ReadFile(const_cast<char *>("data/test"));
 
@@ -111,7 +111,7 @@ TEST(MovieIndex, BuildMovieIndexFromFile) {
   // a particular movie, etc. 
   DestroyIndex(index);
 }
-
+*/
 
 int main(int argc, char **argv) {
     ::testing::InitGoogleTest(&argc, argv);

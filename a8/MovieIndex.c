@@ -98,8 +98,9 @@ int AddMovieToIndex(Index index, Movie *movie, enum IndexField field) {
   if (field == ContentRating) {
     desc = movie->content_rating;
   }
+  /*
   int bucket_num = HashKeyToBucketNum(index, kvp.key);
-  LinkedList bucket = index->buckets;
+  LinkedList bucket = index->buckets[bucket_num];
   if (NumElementsInLinkedList(bucket) == 0) {
     MovieSet movieset = CreateMovieSet(desc);
     AddMovieToSet(movieset, movie);
@@ -107,8 +108,38 @@ int AddMovieToIndex(Index index, Movie *movie, enum IndexField field) {
     InsertLinkedList(bucket, &kvp);
     return 0;
   }
-  
-
+  */
+  HTKeyValue *result = NULL;
+  HTKeyValue *old_kvp = NULL;
+  if (LookupInHashtable(index, kvp.key, result) == 0) {
+    MovieSet movieset = result->value;
+    LinkedList list = movieset->movies;
+    LLIter iter = CreateLLIter(list);
+    void* old_kv;
+    LLIterGetPayload(iter, &old_kv);
+    if ((Movie*)old_kv == movie) {
+        DestroyLLIter(iter);
+        return 0;
+      }
+    while (LLIterHasNext(iter)) {
+        LLIterNext(iter);
+        LLIterGetPayload(iter, &old_kv);
+        if ((Movie*)old_kv == movie) {
+            DestroyLLIter(iter);
+            return 0;
+          }
+      }
+    DestroyLLIter(iter);
+    AddMovieToSet((MovieSet)result->value, movie);
+    return 0;
+  }
+  MovieSet movieset = CreateMovieSet(desc);
+  AddMovieToSet(movieset, movie);
+  kvp.value = movieset;
+  // HTKeyValue *old_kvp;
+  PutInHashtable(index, kvp, old_kvp);
+  return 0;
+  /*
   LLIter iter = CreateLLIter(bucket);
 
   HTKeyValue old_kv;
@@ -136,6 +167,7 @@ int AddMovieToIndex(Index index, Movie *movie, enum IndexField field) {
   //AddMovieToSet((MovieSet)kvp.value, movie);
 
   return 0;
+  */
 }
 
 uint64_t ComputeKey(Movie* movie, enum IndexField which_field, int which_actor) {
