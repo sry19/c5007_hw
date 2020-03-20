@@ -58,13 +58,13 @@ int main(int argc, char* argv[]) {
   enum IndexField field;
   for (int i = 1; i < argc; i++) {
     if (argv[i][0] == '-') {
-      if (argv[1] == "-s") {
+      if (argv[i] == "-s") {
         field = StarRating;
-      } else if (argv[1] == "-c") {
+      } else if (argv[i] == "-c") {
         field = ContentRating;
-      } else if (argv[1] == "-a") {
+      } else if (argv[i] == "-a") {
         field = Actor;
-      } else if (argv[1] == "g") {
+      } else if (argv[i] == "g") {
         field = Genre;
       } else {
         printf("undefined option");
