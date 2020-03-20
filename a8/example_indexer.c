@@ -32,14 +32,59 @@
 
 void DestroyNothing(void* thing) {
   // Helper method to destroy the LinkedList.
+  DestroyMovie((Movie*) thing);
 }
 
 int main(int argc, char* argv[]) {
-  // STEP 8(Student): Check args, do the right thing. 
-  char* filename; 
+  // STEP 8(Student): Check args, do the right thing.
+  if (argc <= 1) {
+    printf("no argument provided\n");
+    return -1;
+  }
+  if (argc == 2) {
+    if (argv[1][0] == '-') {
+      printf("no filename provided\n");
+    }
+    else {
+      printf("no flag provided\n");
+    }
+    return -1;
+  }
+  if (argc > 3) {
+    printf("too many arguments\n");
+    return -1;
+  }
+  char * filename = NULL;
+  enum IndexField field;
+  for (int i = 1; i < argc; i++) {
+    if (argv[i][0] == '-') {
+      if (argv[1] == "-s") {
+        field = StarRating;
+      } else if (argv[1] == "-c") {
+        field = ContentRating;
+      } else if (argv[1] == "-a") {
+        field = Actor;
+      } else if (argv[1] == "g") {
+        field = Genre;
+      } else {
+        printf("undefined option");
+        return -1;
+      }
+    } else if (filename == NULL) {
+        filename = argv[i];
+    } else {
+      printf("missing arguments\n");
+      return -1;
+    }
+  }
+  if (filename == NULL) {
+    printf("no filename provided\n");
+    return -1;
+  }
   LinkedList movie_list  = ReadFile(filename);
-  Index index; // STEP 9(Student): Create the index properly. 
 
+  // STEP 9(Student): Create the index properly.
+  Index index = BuildMovieIndex(movie_list, field);
   PrintReport(index);
   DestroyLinkedList(movie_list, &DestroyNothing);
   DestroyIndex(index);

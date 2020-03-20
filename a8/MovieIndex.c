@@ -50,7 +50,7 @@ Index BuildMovieIndex(LinkedList movies, enum IndexField field_to_index) {
   LLIterGetPayload(iter, (void**)&cur_movie);
 
   int result = AddMovieToIndex(movie_index, cur_movie, field_to_index);
-  
+
   while (LLIterHasNext(iter)) {
     LLIterNext(iter);
     LLIterGetPayload(iter, (void**)&cur_movie);
@@ -63,7 +63,7 @@ Index BuildMovieIndex(LinkedList movies, enum IndexField field_to_index) {
 
 int AddMovieActorsToIndex(Index index, Movie *movie) {
 
-  // STEP 6(Student): Add movies to the index via actors. 
+  // STEP 6(Student): Add movies to the index via actors.
   //  Similar to STEP 5.
   for (int i = 0; i < movie->num_actors; i++) {
     HTKeyValue kvp;
@@ -114,9 +114,9 @@ int AddMovieToIndex(Index index, Movie *movie, enum IndexField field) {
 
   HTKeyValue kvp;
   kvp.key = ComputeKey(movie, field, 0);
-  
+
   // STEP 5(Student): How do we add movies to the index?
-  // The general idea: 
+  // The general idea:
   // Check hashtable to see if relevant MovieSet already exists
   // If it does, grab access to it from the hashtable
   // If it doesn't, create the new MovieSet and get the pointer to it
@@ -133,17 +133,6 @@ int AddMovieToIndex(Index index, Movie *movie, enum IndexField field) {
   if (field == ContentRating) {
     desc = movie->content_rating;
   }
-  /*
-  int bucket_num = HashKeyToBucketNum(index, kvp.key);
-  LinkedList bucket = index->buckets[bucket_num];
-  if (NumElementsInLinkedList(bucket) == 0) {
-    MovieSet movieset = CreateMovieSet(desc);
-    AddMovieToSet(movieset, movie);
-    kvp.value = movieset;
-    InsertLinkedList(bucket, &kvp);
-    return 0;
-  }
-  */
   HTKeyValue result;
   HTKeyValue *old_kvp = NULL;
   if (LookupInHashtable(index, kvp.key, &result) == 0) {
@@ -171,38 +160,9 @@ int AddMovieToIndex(Index index, Movie *movie, enum IndexField field) {
   MovieSet movieset = CreateMovieSet(desc);
   AddMovieToSet(movieset, movie);
   kvp.value = movieset;
-  // HTKeyValue *old_kvp;
   PutInHashtable(index, kvp, old_kvp);
   return 0;
-  /*
-  LLIter iter = CreateLLIter(bucket);
-
-  HTKeyValue old_kv;
-  LLIterGetPayload(iter, (void**)&old_kv);
-  if (old_kv.key == kvp.key) {
-    AddMovieToSet((MovieSet)old_kv.value, movie);
-    DestroyLLIter(iter);
-    return 0;
-  }
-  while (LLIterHasNext(iter)) {
-    LLIterNext(iter);
-    LLIterGetPayload(iter, (void**)&old_kv);
-    if (old_kv.key == kvp.key) {
-      AddMovieToSet((MovieSet)old_kv.value, movie);
-      DestroyLLIter(iter);
-      return 0;
-    }
-  }
-  MovieSet movieset = CreateMovieSet(desc);
-  AddMovieToSet(movieset, movie);
-  kvp.value = movieset;
-  InsertLinkedList(bucket, &kvp);
-  DestroyLLIter(iter);
-  // After we either created or retrieved the MovieSet from the Hashtable: 
-  //AddMovieToSet((MovieSet)kvp.value, movie);
-
-  return 0;
-  */
+  // After we either created or retrieved the MovieSet from the Hashtable:
 }
 
 uint64_t ComputeKey(Movie* movie, enum IndexField which_field, int which_actor) {
