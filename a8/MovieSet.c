@@ -53,12 +53,17 @@ MovieSet CreateMovieSet(char *desc) {
   return set;
 }
 
+// a new helper function
+void DoNothing(void *a_movie) {
+}
+
 void DestroyMovieSet(MovieSet set) {
   // TODO(Student): What else to do to clean up a MovieSet?
   // Free set
   if (set->desc != NULL) {
     free(set->desc);
   }
-  DestroyLinkedList(set->movies, &DestroyMovieWrapper);
+  DestroyLinkedList(set->movies, &DoNothing);//&DestroyMovieWrapper);
+  set->movies = NULL;
   free(set);
 }

@@ -89,7 +89,7 @@ int main(int argc, char* argv[]) {
   PrintReport(index);
 
   DestroyIndex(index);
-  //  DestroyLinkedList(movie_list, &DestroyNothing);
+  DestroyLinkedList(movie_list, &DestroyNothing);
 
 
 

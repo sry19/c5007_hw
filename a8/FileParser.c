@@ -89,10 +89,10 @@ Movie* CreateMovieFromRow(char *data_row) {
   const int size = mov->num_actors;
   //char* actors = new char[size];
   mov->actor_list = (char**)malloc(sizeof(char*)*size);
-  char* actor_name = strtok(token, " ");
+  char* actor_name = strtok(token, "\' \'");
   mov->actor_list[0] = CheckAndAllocateString(actor_name);
   for (int i=1; i<mov->num_actors;i++) {
-    actor_name = strtok(NULL, " ");
+    actor_name = strtok(NULL, "\' \' ");
     mov->actor_list[i] = CheckAndAllocateString(actor_name);
   }
   //mov->actor_list = actors;
