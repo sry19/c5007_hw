@@ -63,7 +63,7 @@ TEST(Movie, CreateManualAndDestroyMovie) {
   m1->duration = 125;
   m1->genre = "RomCom";
   m1->num_actors = 2;
-  char* actors[2] = {};
+  char** actors = (char**)malloc(sizeof(char*)*2);
   actors[0] = "Tom Hanks";
   actors[1] = "Meg Ryan";
   m1->actor_list = actors;
@@ -76,7 +76,7 @@ char* MallocString(const char* str) {
   snprintf(cr, strlen(str), "%s", str);
   return cr;
 }
-/*
+
 TEST(Movie, CreateWithMallocdData) {
   Movie* m1 = CreateMovie();
   m1->star_rating = 7.5;
@@ -85,7 +85,7 @@ TEST(Movie, CreateWithMallocdData) {
   m1->duration = 125;
   m1->genre = MallocString("RomCom");
   m1->num_actors = 2;
-  char* actors[2] = {};
+  char** actors = (char**)malloc(sizeof(char*)*2);
   actors[0] = MallocString("Tom Hanks");
   actors[1] = MallocString("Meg Ryan");
   m1->actor_list = actors;
@@ -100,7 +100,7 @@ TEST(Movie, CreateWithMallocdData) {
   DestroyMovie(m1);
 
 }
-*/
+
 
 TEST(Movie, CreateFromRow) {
   // Copying the string from a const to an array
