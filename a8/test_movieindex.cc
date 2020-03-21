@@ -90,7 +90,8 @@ TEST(MovieIndex, AddMovieToIndex) {
 
   // Try to insert movie again
   AddMovieToIndex(index, m1, ContentRating);
-
+  //DONE(Ruoyun): test if we cannot add the same movie to the index
+  ASSERT_EQ(NumElemsInHashtable(index), 1);
   // Add another movie to the index (same IndexType)
   AddMovieToIndex(index, m2, ContentRating);
   ASSERT_EQ(NumElemsInHashtable(index), 2);
@@ -108,7 +109,10 @@ TEST(MovieIndex, BuildMovieIndexFromFile) {
   // Do a few spot checks.
   // E.g., Pull out a MovieSet from the Hashtable;
   // Check to see if the set has expected number of movies,
-  // a particular movie, etc. 
+  // a particular movie, etc.
+  //DONE(Ruoyun): check if similar movies are in the same set
+  ASSERT_EQ(true, NumElemsInHashtable(index) <= 3);
+
   DestroyIndex(index);
 }
 

@@ -1,4 +1,7 @@
 /*
+ *  Ruoyun Sun
+ *  3/20 added some tests
+ *
  *  Adrienne Slaughter
  *  5007 Spr 2020
  *
@@ -39,7 +42,7 @@ void DestroyLLMovie(void *payload) {
 TEST(Movie, CreateDestroyMovie) {
   Movie* m1 = CreateMovie();
   ASSERT_TRUE(m1 != NULL);
-  
+
   ASSERT_EQ(m1->content_rating, nullptr);
   ASSERT_EQ(m1->genre, nullptr);
   ASSERT_EQ(m1->actor_list, nullptr);
@@ -70,7 +73,7 @@ TEST(Movie, CreateManualAndDestroyMovie) {
 char* MallocString(const char* str) {
   char* cr = (char*)malloc(sizeof(char) * strlen(str) + 1);
   snprintf(cr, strlen(str), "%s", str);
-  return cr; 
+  return cr;
 }
 /*
 TEST(Movie, CreateWithMallocdData) {
@@ -92,7 +95,7 @@ TEST(Movie, CreateWithMallocdData) {
   ASSERT_NE(m1->actor_list[0], nullptr);
   ASSERT_NE(m1->actor_list[1], nullptr);
   ASSERT_NE(m1->actor_list, nullptr);
-  
+
   DestroyMovie(m1);
 
 }
@@ -111,14 +114,15 @@ TEST(Movie, CreateFromRow) {
   ASSERT_EQ(0, strcmp(m1->title, "The Shawshank Redemption"));
   ASSERT_EQ(142, m1->duration);
   ASSERT_EQ(0, strcmp(m1->genre, "Crime"));
-  //  ASSERT_EQ(-1, m1->actor_list); // TODO: Check actors
-  ASSERT_EQ(3, m1->num_actors);            
+//  ASSERT_EQ(-1, m1->actor_list); // TODO: Check actors
+  //DONE(Ruoyun):test if actors are splitted as expected
+  ASSERT_EQ(3, m1->num_actors);
   ASSERT_EQ(0, strcmp(m1->actor_list[0], "Tim Robbins"));
   ASSERT_EQ(0, strcmp(m1->actor_list[2], "Bob Gunton"));
   // TODO: Create from a improper row
 
-  DestroyMovie(m1); 
-  
+  DestroyMovie(m1);
+
 }
 
 TEST(FileParser, ReadGoodFile) {
