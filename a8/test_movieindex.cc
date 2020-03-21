@@ -58,7 +58,7 @@ TEST(MovieSet, AddOneMovie) {
   int res = AddMovieToSet(set, movie);
   ASSERT_EQ(res, 0);
   ASSERT_EQ(NumElementsInLinkedList(set->movies), 1);
-  
+
   DestroyMovieSet(set);
 }
 
@@ -108,6 +108,13 @@ TEST(MovieIndex, AddMovieToIndex) {
 }
 
 TEST(MovieIndex, BuildMovieIndexFromFile) {
+  // DONE(Ruoyun): build an empty index
+  LinkedList empty_list = CreateLinkedList();
+  Index index1 = BuildMovieIndex(empty_list, Genre);
+  ASSERT_EQ(true, NumElemsInHashtable(index1) == 0);
+  DestroyIndex(index1);
+  free(empty_list);
+
   LinkedList movie_list  = ReadFile(const_cast<char *>("data/test"));
 
   ASSERT_EQ(5u, NumElementsInLinkedList(movie_list));
