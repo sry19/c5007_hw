@@ -71,37 +71,38 @@ Movie* CreateMovieFromRow(char *data_row) {
 
   // STEP 2(Student): Parse the row to create and populate a Movie.
   // Use the strtok
-  char* token = strtok(data_row, "|");
+  char * rest = data_row;
+  char* token = strtok_r(rest, "|", &rest);
   if (token == NULL) {
     DestroyMovie(mov);
     return NULL;
   }
   mov->star_rating = CheckDouble(token);
-  token = strtok(NULL, "|");
+  token = strtok_r(rest, "|", &rest);
   if (token == NULL) {
     DestroyMovie(mov);
     return NULL;
   }
   mov->title = CheckAndAllocateString(token);
-  token = strtok(NULL, "|");
+  token = strtok_r(rest, "|", &rest);
   if (token == NULL) {
     DestroyMovie(mov);
     return NULL;
   }
   mov->content_rating = CheckAndAllocateString(token);
-  token = strtok(NULL, "|");
+  token = strtok_r(rest, "|", &rest);
   if (token == NULL) {
     DestroyMovie(mov);
     return NULL;
   }
   mov->genre = CheckAndAllocateString(token);
-  token = strtok(NULL, "|");
+  token = strtok_r(rest, "|", &rest);
   if (token == NULL) {
     DestroyMovie(mov);
     return NULL;
   }
   mov->duration = CheckInt(token);
-  token = strtok(NULL, "|");
+  token = strtok_r(rest, "|", &rest);
   if (token == NULL) {
     DestroyMovie(mov);
     return NULL;
@@ -115,10 +116,10 @@ Movie* CreateMovieFromRow(char *data_row) {
   mov->num_actors = mov->num_actors+1;
   const int size = mov->num_actors;
   mov->actor_list = (char**)malloc(sizeof(char*)*size);
-  char* actor_name = strtok(token, ",");
+  char* actor_name = strtok_r(token, ",", &token);
   mov->actor_list[0] = CheckAndAllocateString(actor_name);
   for (int i = 1; i < mov->num_actors; i++) {
-    actor_name = strtok(NULL, ",");
+    actor_name = strtok_r(token, ",", &token);
     mov->actor_list[i] = CheckAndAllocateString(actor_name);
   }
 
