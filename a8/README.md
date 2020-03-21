@@ -1,13 +1,13 @@
 ### TODO Please edit the following information in this README
 
-- Name:
-- How many hours did it take you to complete this assignment?
+- Name: Ruoyun Sun
+- How many hours did it take you to complete this assignment? 20 hours
 - Did you collaborate with any other students/TAs/Professors? (Name them below)
   - tbd
   - tbd
 - Did you use any external resources? (Cite them below)
-  - tbd
-  - tbd
+  - https://www.geeksforgeeks.org/strtok-strtok_r-functions-c-examples/
+  - https://www.onlinegdb.com/online_c_compiler
 - (Optional) What was your favorite part of the assignment?
 - (Optional) How would you improve the assignment?
 

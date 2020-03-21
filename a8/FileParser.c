@@ -1,4 +1,7 @@
 /*
+ *  Ruoyun Sun
+ *  3/20 updated some functions
+ *
  *  Adrienne Slaughter
  *  5007 Spr 2020
  *
@@ -69,18 +72,42 @@ Movie* CreateMovieFromRow(char *data_row) {
   // STEP 2(Student): Parse the row to create and populate a Movie.
   // Use the strtok
   char* token = strtok(data_row, "|");
+  if (token == NULL) {
+    DestroyMovie(mov);
+    return NULL;
+  }
   mov->star_rating = CheckDouble(token);
   token = strtok(NULL, "|");
+  if (token == NULL) {
+    DestroyMovie(mov);
+    return NULL;
+  }
   mov->title = CheckAndAllocateString(token);
   token = strtok(NULL, "|");
+  if (token == NULL) {
+    DestroyMovie(mov);
+    return NULL;
+  }
   mov->content_rating = CheckAndAllocateString(token);
   token = strtok(NULL, "|");
+  if (token == NULL) {
+    DestroyMovie(mov);
+    return NULL;
+  }
   mov->genre = CheckAndAllocateString(token);
   token = strtok(NULL, "|");
+  if (token == NULL) {
+    DestroyMovie(mov);
+    return NULL;
+  }
   mov->duration = CheckInt(token);
   token = strtok(NULL, "|");
+  if (token == NULL) {
+    DestroyMovie(mov);
+    return NULL;
+  }
   char c;
-  for (int i=0; (c=token[i])!='\0';i++) {
+  for (int i = 0; (c = token[i]) != '\0'; i++) {
       if (c == ',') {
         mov->num_actors++;
       }
@@ -90,7 +117,7 @@ Movie* CreateMovieFromRow(char *data_row) {
   mov->actor_list = (char**)malloc(sizeof(char*)*size);
   char* actor_name = strtok(token, ",");
   mov->actor_list[0] = CheckAndAllocateString(actor_name);
-  for (int i=1; i<mov->num_actors;i++) {
+  for (int i = 1; i < mov->num_actors; i++) {
     actor_name = strtok(NULL, ",");
     mov->actor_list[i] = CheckAndAllocateString(actor_name);
   }

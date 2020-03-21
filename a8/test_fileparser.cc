@@ -33,6 +33,7 @@ extern "C" {
 
 const char* movie_row_A = "9.3|The Shawshank Redemption|R|Crime|142|Tim Robbins,Morgan Freeman,Bob Gunton";
 const char* movie_row_B = "7.4|Back to the Future Part III|PG|Adventure|118|Michael J. Fox,Christopher Lloyd,Mary Steenburgen";
+const char* invalid_row = "9.3|abs|R";
 
 void DestroyLLMovie(void *payload) {
   DestroyMovie((Movie*)payload);
@@ -115,14 +116,18 @@ TEST(Movie, CreateFromRow) {
   ASSERT_EQ(142, m1->duration);
   ASSERT_EQ(0, strcmp(m1->genre, "Crime"));
 //  ASSERT_EQ(-1, m1->actor_list); // TODO: Check actors
-  //DONE(Ruoyun):test if actors are splitted as expected
+  // DONE(Ruoyun):test if actors are splitted as expected
   ASSERT_EQ(3, m1->num_actors);
   ASSERT_EQ(0, strcmp(m1->actor_list[0], "Tim Robbins"));
   ASSERT_EQ(0, strcmp(m1->actor_list[2], "Bob Gunton"));
-  // TODO: Create from a improper row
+
+  // TODO(Ruoyun): Create from a improper row
+  char row2[1000];
+  snprintf(row2, 1000, "%s", invalid_row);
+  Movie* m2 = CreateMovieFromRow(row2);
+  ASSERT_EQ(NULL, m2);
 
   DestroyMovie(m1);
-
 }
 
 TEST(FileParser, ReadGoodFile) {
@@ -138,7 +143,6 @@ TEST(FileParser, ReadNonexistentFile) {
   // try to read a non-existent file
   LinkedList movie_list = ReadFile(const_cast<char *>("bogus/file"));
   ASSERT_TRUE(movie_list == NULL);
-
 }
 
 TEST(FileParser, ReadBinaryFile) {

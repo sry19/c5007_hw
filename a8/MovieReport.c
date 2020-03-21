@@ -1,4 +1,7 @@
 /*
+ *  Ruoyun Sun
+ *  3/20 updated some methods
+ *
  *  Adrienne Slaughter
  *  5007 Spr 2020
  *

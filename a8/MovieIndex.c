@@ -1,4 +1,7 @@
 /*
+ *  Ruoyun Sun
+ *  3/20 updated some methods
+ *
  *  Adrienne Slaughter
  *  5007 Spr 2020
  *
@@ -62,7 +65,6 @@ Index BuildMovieIndex(LinkedList movies, enum IndexField field_to_index) {
 
 
 int AddMovieActorsToIndex(Index index, Movie *movie) {
-
   // STEP 6(Student): Add movies to the index via actors.
   //  Similar to STEP 5.
   for (int i = 0; i < movie->num_actors; i++) {
@@ -94,8 +96,7 @@ int AddMovieActorsToIndex(Index index, Movie *movie) {
         DestroyLLIter(iter);
         AddMovieToSet((MovieSet)result.value, movie);
       }
-    }
-    else {
+    } else {
       char * desc = movie->actor_list[i];
       MovieSet movieset = CreateMovieSet(desc);
       AddMovieToSet(movieset, movie);
@@ -165,7 +166,8 @@ int AddMovieToIndex(Index index, Movie *movie, enum IndexField field) {
   // After we either created or retrieved the MovieSet from the Hashtable:
 }
 
-uint64_t ComputeKey(Movie* movie, enum IndexField which_field, int which_actor) {
+uint64_t ComputeKey(Movie* movie,
+                    enum IndexField which_field, int which_actor) {
   char rating_str[10];
   switch (which_field) {
     case Genre:
@@ -187,7 +189,7 @@ uint64_t ComputeKey(Movie* movie, enum IndexField which_field, int which_actor) 
 }
 
 // Removed for simplicity
-//MovieSet GetMovieSet(Index index, const char *term){}
+// MovieSet GetMovieSet(Index index, const char *term){}
 
 int DestroyIndex(Index index) {
   DestroyHashtable(index, &DestroyMovieSetWrapper);

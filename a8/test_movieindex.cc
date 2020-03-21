@@ -1,4 +1,7 @@
 /*
+ *  Ruoyun Sun
+ *  3/20 updated some functions
+ *
  *  Adrienne Slaughter
  *  5007 Spr 2020
  *
@@ -85,24 +88,25 @@ TEST(MovieIndex, AddMovieToIndex) {
   AddMovieToIndex(index, m1, ContentRating);
 
   // Check that movie is in index
-  
+
   // Check size/num elements (should be num of types, not of movies)
   ASSERT_EQ(NumElemsInHashtable(index), 1);
 
   // Try to insert movie again
   AddMovieToIndex(index, m1, ContentRating);
-  //DONE(Ruoyun): test if we cannot add the same movie to the index
+  // DONE(Ruoyun): test if we cannot add the same movie to the index
   ASSERT_EQ(NumElemsInHashtable(index), 1);
   // Add another movie to the index (same IndexType)
   AddMovieToIndex(index, m2, ContentRating);
   ASSERT_EQ(NumElemsInHashtable(index), 2);
 
-  //DONE(Ruoyun):check if movies have similar contentrating are in the same movieset
+  // DONE(Ruoyun):check if movies have similar contentrating are in
+  // the same movieset
   strcpy(row, movie_row_C);
   MoviePtr m3 = CreateMovieFromRow(row);
   AddMovieToIndex(index, m3, ContentRating);
   ASSERT_EQ(NumElemsInHashtable(index), 2);
-  
+
   // Destroy movie index
   DestroyIndex(index);
 }
@@ -125,7 +129,7 @@ TEST(MovieIndex, BuildMovieIndexFromFile) {
   // E.g., Pull out a MovieSet from the Hashtable;
   // Check to see if the set has expected number of movies,
   // a particular movie, etc.
-  //DONE(Ruoyun): check if similar movies are in the same set
+  // DONE(Ruoyun): check if similar movies are in the same set
   ASSERT_EQ(true, NumElemsInHashtable(index) <= 3);
 
   DestroyIndex(index);

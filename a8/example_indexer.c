@@ -1,4 +1,7 @@
 /*
+ *  Ruoyun Sun
+ *  3/20 updated some functions
+ *
  *  Adrienne Slaughter
  *  5007 Spr 2020
  *
@@ -45,8 +48,7 @@ int main(int argc, char* argv[]) {
   if (argc == 2) {
     if (argv[1][0] == '-') {
       printf("no filename provided\n");
-    }
-    else {
+    } else {
       printf("no flag provided\n");
     }
     return -1;

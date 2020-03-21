@@ -1,4 +1,7 @@
 /*
+ *  Ruoyun Sun
+ *  3/20 updated some methods
+ *
  *  Adrienne Slaughter
  *  5007 Spr 2020
  *
@@ -64,7 +67,7 @@ void DestroyMovieSet(MovieSet set) {
   if (set->desc != NULL) {
     free(set->desc);
   }
-  DestroyLinkedList(set->movies, &DoNothing);//&DestroyMovieWrapper
+  DestroyLinkedList(set->movies, &DoNothing);  // &DestroyMovieWrapper
   set->movies = NULL;
   free(set);
 }
