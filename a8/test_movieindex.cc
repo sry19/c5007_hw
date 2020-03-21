@@ -35,6 +35,7 @@ extern "C" {
 
 const char* movie_row_A = "9.3|The Shawshank Redemption|R|Crime|142|Tim Robbins,Morgan Freeman,Bob Gunton";
 const char* movie_row_B = "7.4|Back to the Future Part III|PG|Adventure|118|Michael J. Fox,Christopher Lloyd,Mary Steenburgen";
+const char* movie_row_C = "9.6|ABC|R|Crime|1|Bob·Gunton";
 
 void DestroyLLMovie(void *payload) {
   DestroyMovie((Movie*)payload);
@@ -95,6 +96,13 @@ TEST(MovieIndex, AddMovieToIndex) {
   // Add another movie to the index (same IndexType)
   AddMovieToIndex(index, m2, ContentRating);
   ASSERT_EQ(NumElemsInHashtable(index), 2);
+
+  //DONE(Ruoyun):check if movies have similar contentrating are in the same movieset
+  strcpy(row, movie_row_C);
+  MoviePtr m3 = CreateMovieFromRow(row);
+  AddMovieToIndex(index, m3, ContentRating);
+  ASSERT_EQ(NumElemsInHashtable(index), 2);
+  
   // Destroy movie index
   DestroyIndex(index);
 }
