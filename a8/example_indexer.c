@@ -35,8 +35,6 @@
 
 void DestroyNothing(void* thing) {
   // Helper method to destroy the LinkedList.
-  DestroyMovie((Movie*) thing);
-  thing = NULL;
 }
 
 int main(int argc, char* argv[]) {
@@ -90,10 +88,7 @@ int main(int argc, char* argv[]) {
   Index index = BuildMovieIndex(movie_list, field);
   PrintReport(index);
 
-  DestroyIndex(index);
   DestroyLinkedList(movie_list, &DestroyNothing);
-
-
-
+  DestroyIndex(index);
   return 0;
 }

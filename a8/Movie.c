@@ -45,17 +45,21 @@ Movie* CreateMovie() {
 
 void DestroyMovie(Movie* movie) {
   // STEP 1(Student): Make sure the movie is destroyed properly.
-
+  if (movie == NULL) {
+    return;
+  }
   free(movie->title);
+  movie->title = NULL;
   free(movie->content_rating);
+  movie->content_rating = NULL;
   free(movie->genre);
+  movie->title = NULL;
   for (int i = 0; i < movie->num_actors; i++) {
     free(movie->actor_list[i]);
   }
   free(movie->actor_list);
-
+  movie->actor_list = NULL;
   free(movie);
-  movie = NULL;
 }
 
 

@@ -44,6 +44,9 @@ void DestroyLLMovie(void *payload) {
   DestroyMovie((Movie*)payload);
 }
 
+void DoNothing(void *payload) {
+}
+
 TEST(MovieSet, CreateDestroy) {
   MovieSet set = CreateMovieSet("My test set");
   ASSERT_NE(set, nullptr);
@@ -111,6 +114,7 @@ TEST(MovieIndex, AddMovieToIndex) {
   DestroyIndex(index);
 }
 
+
 TEST(MovieIndex, BuildMovieIndexFromFile) {
   // DONE(Ruoyun): build an empty index
   LinkedList empty_list = CreateLinkedList();
@@ -131,7 +135,7 @@ TEST(MovieIndex, BuildMovieIndexFromFile) {
   // a particular movie, etc.
   // DONE(Ruoyun): check if similar movies are in the same set
   ASSERT_EQ(true, NumElemsInHashtable(index) <= 3);
-
+  DestroyLinkedList(movie_list, &DoNothing);
   DestroyIndex(index);
 }
 

@@ -67,7 +67,7 @@ void DestroyMovieSet(MovieSet set) {
   if (set->desc != NULL) {
     free(set->desc);
   }
-  DestroyLinkedList(set->movies, &DoNothing);  // &DestroyMovieWrapper
+  DestroyLinkedList(set->movies, &DestroyMovieWrapper);
   set->movies = NULL;
   free(set);
 }
