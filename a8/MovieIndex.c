@@ -39,6 +39,12 @@ void toLower(char *str, int len) {
   }
 }
 
+char* MallocString(const char* str) {
+  char* cr = (char*)malloc(sizeof(char) * strlen(str) + 1);
+  snprintf(cr, strlen(str), "%s", str);
+  return cr;
+}
+
 Index BuildMovieIndex(LinkedList movies, enum IndexField field_to_index) {
   Index movie_index = CreateIndex();
 
@@ -63,6 +69,19 @@ Index BuildMovieIndex(LinkedList movies, enum IndexField field_to_index) {
   return movie_index;
 }
 
+Movie* MakeMovieCopy(Movie* movie) {
+  Movie* new_movie = CreateMovie();
+  new_movie->title = MallocString(movie->title);
+  new_movie->star_rating = movie->star_rating;
+  new_movie->content_rating = MallocString(movie->content_rating);
+  new_movie->genre = MallocString(movie->genre);
+  new_movie->num_actors = movie->num_actors;
+  new_movie->actor_list = (char**)malloc(sizeof(char*)*new_movie->num_actors);
+  for (int i = 0; i < new_movie->num_actors; i++) {
+    new_movie->actor_list[i] = MallocString(movie->actor_list[i]);
+  }
+  return new_movie;
+}
 
 int AddMovieActorsToIndex(Index index, Movie *movie) {
   // STEP 6(Student): Add movies to the index via actors.
@@ -94,12 +113,22 @@ int AddMovieActorsToIndex(Index index, Movie *movie) {
       }
       if (flag == 0) {
         DestroyLLIter(iter);
-        AddMovieToSet((MovieSet)result.value, movie);
+        if (i == 0) {
+          AddMovieToSet((MovieSet)result.value, movie);
+        } else {
+          Movie* new_movie = MakeMovieCopy(movie);
+          AddMovieToSet((MovieSet)result.value, new_movie);
+        }
       }
     } else {
       char * desc = movie->actor_list[i];
       MovieSet movieset = CreateMovieSet(desc);
-      AddMovieToSet(movieset, movie);
+      if (i == 0) {
+        AddMovieToSet(movieset, movie);
+      } else {
+        Movie* new_movie = MakeMovieCopy(movie);
+        AddMovieToSet(movieset, new_movie);
+      }
       kvp.value = movieset;
       PutInHashtable(index, kvp, old_kvp);
     }
