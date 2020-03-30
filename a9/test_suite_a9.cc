@@ -387,7 +387,27 @@ TEST(MovieTitleIndex, GetDocumentSet) {
 
 
 TEST(QueryProcessor, FindMovies) {
-
+  MovieTitleIndex ind = CreateMovieTitleIndex();
+  Movie *m1 = CreateMovie();
+  char* title = (char*)(malloc(sizeof(char)*50));
+  strcpy(title, "Sleepless in Seattle");
+  m1->title = title;
+  AddMovieTitleToIndex(ind, m1, 1, 19);
+  Movie *m2 = CreateMovie();
+  char* title2 = (char*)(malloc(sizeof(char)*50));
+  strcpy(title2, "For the love of the Foo. In Foo not Foo.");
+  int doc_id2 = 42;
+  int row_id2 = 4;
+  m2->title = title2;
+  AddMovieTitleToIndex(ind, m2, doc_id2, row_id2);
+  DocumentSet set2 = GetDocumentSet(ind, "foo");
+  
+  SearchResultIter iter = CreateSearchResultIter(set2);
+  DestroySearchResultIter(iter);
+  DestroyMovieTitleIndex(ind);
+  DestroyMovie(m1);
+  DestroyMovie(m2);
+  
   
 }
 

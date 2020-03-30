@@ -30,7 +30,11 @@ SearchResultIter CreateSearchResultIter(DocumentSet set) {
     (SearchResultIter)malloc(sizeof(struct searchResultIter));
 
     // STEP 7: Implement the initialization of the iter.
-
+  iter->doc_iter = CreateHashtableIterator(set->doc_index);
+  HTKeyValue kvp;
+  HTIteratorGet(iter->doc_iter, &kvp);
+  iter->cur_doc_id = kvp.key;
+  iter->offset_iter = CreateLLIter(kvp.value);
   return iter;
 }
 
