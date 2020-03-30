@@ -27,11 +27,49 @@
 int AddDocInfoToSet(DocumentSet set,  uint64_t docId, int rowId) {
   // STEP 4: Implement AddDocInfoToSet.
   // Make sure there are no duplicate rows or docIds.
-  return -1;
+  int *row_ptr = rowId;
+  HTKeyValue kvp;
+  kvp.key = docId;
+  HTKeyValue old_kvp;
+  HTKeyValue old_ll;
+  int result = LookupInHashtable(set->doc_index, docId, &old_ll);
+  if (result == 0) {
+    LinkedList ll = old_ll.value;
+    LLIter iter = CreateLLIter(ll);
+    int *payload;
+    while (LLIterHasNext(iter) != 0) {
+      LLIterGetPayload(iter, (void**)&payload);
+      if ((int*)payload == row_ptr) {
+        DestroyLLIter(iter);
+        return -1;
+      } else {
+        LLIterNext(iter);
+      }
+    }
+    LLIterGetPayload(iter, (void**)&payload);
+    if ((int*)payload == row_ptr) {
+        DestroyLLIter(iter);
+        return -1;
+    } else {
+      int* rowid = (int*)malloc(sizeof(rowId));
+      InsertLinkedList(ll, (void*)rowid);
+      DestroyLLIter(iter);
+      return 0;
+    }
+  }
+  kvp.value = CreateLinkedList();
+  int* rowid = (int*)malloc(sizeof(rowId)+1);
+  InsertLinkedList(kvp.value, (void*)rowid);
+  PutInHashtable(set->doc_index, kvp, &old_kvp);
+  return 0;
 }
 
 int DocumentSetContainsDoc(DocumentSet set, uint64_t docId) {
   // STEP 5: Implement DocumentSetContainsDoc
+  HTKeyValue old_ll;
+  if (LookupInHashtable(set->doc_index, docId, &old_ll) == 0) {
+    return 0;
+  }
   return -1;
 }
 
