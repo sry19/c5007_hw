@@ -65,11 +65,23 @@ SearchResultIter FindMovies(MovieTitleIndex index, char *term) {
 
 int SearchResultGet(SearchResultIter iter, SearchResult output) {
   // STEP 9: Implement SearchResultGet
+  int* payload;
+  LLIterGetPayload(iter->offset_iter, (void**)&payload);
+  output->doc_id = (uint64_t)iter->cur_doc_id;
+  output->row_id = *payload;
   return 0;
 }
 
 int SearchResultNext(SearchResultIter iter) {
   // STEP 8: Implement SearchResultNext
+  if (SearchResultIterHasMore(iter) == 0) {
+    return -1;
+  }
+  if (LLIterHasNext(iter->offset_iter) != 0) {
+    LLIterNext(iter->offset_iter);
+  } else {
+    HTIteratorNext(iter->doc_iter);
+  }
   return 0;
 }
 

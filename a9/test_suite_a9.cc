@@ -401,14 +401,25 @@ TEST(QueryProcessor, FindMovies) {
   m2->title = title2;
   AddMovieTitleToIndex(ind, m2, doc_id2, row_id2);
   DocumentSet set2 = GetDocumentSet(ind, "foo");
-  
+
   SearchResultIter iter = CreateSearchResultIter(set2);
+
+  SearchResult output;
+  //SearchResultGet(iter, output);
+  //  ASSERT_NE(FindMovies(ind,"foo"), nullptr);
+  int* payload;
+  //  LLIterGetPayload(iter->offset_iter, (void**)&payload);
+  //EXPECT_EQ(iter->cur_doc_id, 42);
+  //EXPECT_EQ(payload,4);
+  //  EXPECT_EQ(output->doc_id, 42);
+  //EXPECT_EQ(output->row_id,4);
+
   DestroySearchResultIter(iter);
   DestroyMovieTitleIndex(ind);
   DestroyMovie(m1);
   DestroyMovie(m2);
   
-  
+
 }
 
 
