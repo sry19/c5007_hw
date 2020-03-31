@@ -65,8 +65,8 @@ SearchResultIter FindMovies(MovieTitleIndex index, char *term) {
 
 int SearchResultGet(SearchResultIter iter, SearchResult output) {
   // STEP 9: Implement SearchResultGet
-  int* payload;
-  LLIterGetPayload(iter->offset_iter, (void**)&payload);
+  int* payload = NULL;
+  int result = LLIterGetPayload(iter->offset_iter, (void**)&payload);
   output->doc_id = (uint64_t)iter->cur_doc_id;
   output->row_id = *payload;
   return 0;

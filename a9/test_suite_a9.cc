@@ -239,10 +239,10 @@ TEST(FileCrawler, CrawlFilesToMap) {
   // Create a DocIdMap
   DocIdMap docs = CreateDocIdMap();
   // Choose a directory
-  CrawlFilesToMap("data_tiny/", docs);
+  CrawlFilesToMap("data_tiny", docs);
 
   EXPECT_EQ(NumElemsInHashtable(docs), 10);
-  /*
+
   // TODO: This assumes that the ids are unique, starting at 0. 
   int ids[11] = {0};
 
@@ -267,7 +267,7 @@ TEST(FileCrawler, CrawlFilesToMap) {
 
   DestroyHashtableIterator(iter);
   DestroyDocIdMap(docs);
-  */
+
   }
 
 TEST(MovieTitleIndex, Full) {
@@ -400,14 +400,16 @@ TEST(QueryProcessor, FindMovies) {
   int row_id2 = 4;
   m2->title = title2;
   AddMovieTitleToIndex(ind, m2, doc_id2, row_id2);
-  DocumentSet set2 = GetDocumentSet(ind, "foo");
+  //DocumentSet set2 = GetDocumentSet(ind, "foo");
 
-  SearchResultIter iter = CreateSearchResultIter(set2);
+  //SearchResultIter iter = CreateSearchResultIter(set2);
 
-  SearchResult output;
+  SearchResult output = NULL;
   //SearchResultGet(iter, output);
-  //  ASSERT_NE(FindMovies(ind,"foo"), nullptr);
-  int* payload;
+  SearchResultIter iter = FindMovies(ind, "foo");
+  //  SearchResultGet(iter, output);
+  ASSERT_NE(iter, nullptr);
+  //int* payload;
   //  LLIterGetPayload(iter->offset_iter, (void**)&payload);
   //EXPECT_EQ(iter->cur_doc_id, 42);
   //EXPECT_EQ(payload,4);

@@ -37,28 +37,35 @@ void CrawlFilesToMap(const char *dir, DocIdMap map) {
   int n;
   n = scandir(dir, &namelist, 0, alphasort);
 
-
   if (n == -1) {
     return;
   }
-  n -= 1;
-  while (n>=2) {
-    char cur[512];
+  int i;
+  i = n-1;
+  while (i>=0) {
+    if (strcmp(namelist[i]->d_name, ".")==0) {
+      i--;
+      continue;
+    }
+    if (strcmp(namelist[i]->d_name, "..")==0) {
+      i--;
+      continue;
+    }
+    char cur[1024] = "";
     strcpy(cur, dir);
     strcat(cur, "/");
-    strcat(cur, namelist[n]->d_name);
+    strcat(cur, namelist[i]->d_name);
 
-    //CrawlFilesToMap((const char *)cur, map);
-
-    int result;
-    result = stat(namelist[n]->d_name, &s);
-    if (S_IFDIR & s.st_mode) {
+    if (namelist[i]->d_type == DT_DIR) {
       CrawlFilesToMap((const char *)cur, map);
     } else {
-      PutFileInMap(namelist[n]->d_name, map);
+      char* new = (char*)malloc(sizeof(cur));
+      PutFileInMap(new, map);
     }
-    free(namelist[n]);
-    n -= 1;
+    i -= 1;
+  }
+  for(int i=0;i<n;i++) {
+    free(namelist[i]);
   }
   free(namelist);
 }

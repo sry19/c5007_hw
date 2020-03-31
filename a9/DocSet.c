@@ -58,7 +58,7 @@ int AddDocInfoToSet(DocumentSet set,  uint64_t docId, int rowId) {
     }
   }
   kvp.value = CreateLinkedList();
-  int* rowid = (int*)malloc(sizeof(rowId)+1);
+  int* rowid = (int*)malloc(sizeof(rowId));
   InsertLinkedList(kvp.value, (void*)rowid);
   PutInHashtable(set->doc_index, kvp, &old_kvp);
   return 0;
