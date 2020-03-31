@@ -36,7 +36,7 @@ const char* kMovie1 =
     "1|movie|Sleepless in Seattle|Sleepless in Seattle|0|1984|-|120|Comedy,Romance";
 const char* kMovie2 = "tt3247810|tvEpisode|Jonathan Kite|Jonathan Kite|0|2012|-|-|Comedy";
 const char* kMovie3 = "tt0003609|movie|Alexandra|Alexandra|0|1915|-|-|-";
-const char* kMovie4 = "tt0003620|short|Among the Mourners|Among the Mourners|0|1914|-|-|Comedy,Short"; 
+const char* kMovie4 = "tt0003620|short|Among the Mourners|Among the Mourners|0|1914|-|-|Comedy,Short";
 
 
 
@@ -73,8 +73,8 @@ TEST(DirectoryParser, IndexTheFile_OneFile) {
   ASSERT_NE(offset_list, nullptr);
   EXPECT_EQ(NumElementsInLinkedList(offset_list), 1u);
   // TODO: Could check that the rowID is as expected.
-  
-  
+
+
   // There should (ideally) be one entry for "Or"
   set = GetDocumentSet(ind, "or");
   ASSERT_NE(set, nullptr);
@@ -111,7 +111,7 @@ TEST(DirectoryParser, ParseTheFiles) {
   EXPECT_EQ(NumElemsInHashtable(docs), 1);
 
   char *f2 = (char*)(malloc(sizeof(char)*30));
-  strcpy(f2, "data_tiny/tinybu"); 
+  strcpy(f2, "data_tiny/tinybu");
   PutFileInMap(f2, docs);
   EXPECT_EQ(NumElemsInHashtable(docs), 2);
 
@@ -120,7 +120,7 @@ TEST(DirectoryParser, ParseTheFiles) {
 
   ParseTheFiles(docs, ind);
   EXPECT_EQ(NumElemsInHashtable(ind->ht), 57);
-  
+
   DocumentSet set = GetDocumentSet(ind, "coffee.");
   EXPECT_EQ(set, nullptr);
   set = GetDocumentSet(ind, "Coffee");
@@ -138,7 +138,7 @@ TEST(DirectoryParser, ParseTheFiles) {
 
   set = GetDocumentSet(ind, "&");
   EXPECT_EQ(set, nullptr);
-  
+
   set = GetDocumentSet(ind, "foobar");
   EXPECT_EQ(set, nullptr);
 
@@ -243,7 +243,7 @@ TEST(FileCrawler, CrawlFilesToMap) {
 
   EXPECT_EQ(NumElemsInHashtable(docs), 10);
 
-  // TODO: This assumes that the ids are unique, starting at 0. 
+  // TODO: This assumes that the ids are unique, starting at 0.
   int ids[11] = {0};
 
   HTIter iter = CreateHashtableIterator(docs);
@@ -274,7 +274,7 @@ TEST(MovieTitleIndex, Full) {
   // Create a movie index
   MovieTitleIndex ind = CreateMovieTitleIndex();
   EXPECT_EQ(NumElemsInHashtable(ind->ht), 0);
-  
+
   // Add some movies to the index
   Movie *m1 = CreateMovie();
   char* title = (char*)(malloc(sizeof(char)*50));
@@ -283,7 +283,7 @@ TEST(MovieTitleIndex, Full) {
   m1->title = title;
   AddMovieTitleToIndex(ind, m1, 1, 19);
   EXPECT_EQ(NumElemsInHashtable(ind->ht), 3);
-  
+
   // Check the indices
   DocumentSet set = GetDocumentSet(ind, "seattle");
   EXPECT_STREQ(set->desc, "seattle");
@@ -296,16 +296,16 @@ TEST(MovieTitleIndex, Full) {
 
   // ==========================
   // Second Movie
-    
+
   Movie *m2 = CreateMovie();
   char* title2 = (char*)(malloc(sizeof(char)*50));
   strcpy(title2, "For the love of the Foo. In Foo not Foo.");
   int doc_id2 = 42;
   int row_id2 = 4;
-  
+
   m2->title = title2;
   // Index, Movie, doc_id, row_id
-  AddMovieTitleToIndex(ind, m2, doc_id2, row_id2); 
+  AddMovieTitleToIndex(ind, m2, doc_id2, row_id2);
   EXPECT_EQ(NumElemsInHashtable(ind->ht), 9);
 
   DocumentSet set2 = GetDocumentSet(ind, "foo.");
@@ -316,12 +316,12 @@ TEST(MovieTitleIndex, Full) {
   ASSERT_NE(set2, nullptr);
   EXPECT_EQ(NumElemsInHashtable(set2->doc_index), 1);
   EXPECT_STREQ(set2->desc, "foo");
-  
+
   DocumentSet set3 = GetDocumentSet(ind, "in");
   ASSERT_NE(set3, nullptr);
   EXPECT_EQ(NumElemsInHashtable(set3->doc_index), 2);
   EXPECT_STREQ(set3->desc, "in");
-  
+
   DestroyMovieTitleIndex(ind);
   DestroyMovie(m1);
   DestroyMovie(m2);
@@ -337,7 +337,7 @@ TEST(MovieTitleIndex, GetDocumentSet) {
   // Create a movie index
   MovieTitleIndex ind = CreateMovieTitleIndex();
   EXPECT_EQ(NumElemsInHashtable(ind->ht), 0);
-  
+
   // Add some movies to the index
   Movie *m1 = CreateMovie();
   SetMovieTitle(m1, "Sleepless in Seattle");
@@ -346,18 +346,18 @@ TEST(MovieTitleIndex, GetDocumentSet) {
 
   // ==========================
   // Second Movie
-    
+
   Movie *m2 = CreateMovie();
   int doc_id2 = 42;
-  int row_id2 = 4;  
+  int row_id2 = 4;
   SetMovieTitle(m2, "For the love of the Foo. In Foo not Foo.");
   AddMovieTitleToIndex(ind, m2, doc_id2, row_id2);
   EXPECT_EQ(NumElemsInHashtable(ind->ht), 9);
-  
+
   Movie* m3 = CreateMovieFromRow(kMovie2);
   AddMovieTitleToIndex(ind, m3, doc_id2, row_id2 + 1);
   EXPECT_EQ(NumElemsInHashtable(ind->ht), 11);
-  
+
   // Add a bunch of movies with different vals for the index
 
   // Get the set
@@ -374,13 +374,13 @@ TEST(MovieTitleIndex, GetDocumentSet) {
 
   // DestroyDocumentSet(set);
 
-    
+
   // Destroy the movie index
   DestroyMovieTitleIndex(ind);
     DestroyMovie(m1);
     DestroyMovie(m2);
     DestroyMovie(m3);
-  
+
 }
 
 
@@ -420,8 +420,6 @@ TEST(QueryProcessor, FindMovies) {
   DestroyMovieTitleIndex(ind);
   DestroyMovie(m1);
   DestroyMovie(m2);
-  
-
 }
 
 

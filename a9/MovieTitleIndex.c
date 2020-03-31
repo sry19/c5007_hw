@@ -89,8 +89,8 @@ int AddMovieTitleToIndex(MovieTitleIndex index,
   }
   free(free_rest);
   return 0;
-
 }
+
 DocumentSet GetDocumentSet(MovieTitleIndex index, const char *term) {
   HTKeyValue kvp;
   int low_len = strlen(term);

@@ -45,16 +45,16 @@ void CrawlFilesToMap(const char *dir, DocIdMap map) {
   }
   int i;
   i = n-1;
-  while (i>=0) {
-    if (strcmp(namelist[i]->d_name, ".")==0) {
+  while (i >= 0) {
+    if (strcmp(namelist[i]->d_name, ".") == 0) {
       i--;
       continue;
     }
-    if (strcmp(namelist[i]->d_name, "..")==0) {
+    if (strcmp(namelist[i]->d_name, "..") == 0) {
       i--;
       continue;
     }
-    char cur[1024] = "";
+    char cur[1024];
     strcpy(cur, dir);
     strcat(cur, "/");
     strcat(cur, namelist[i]->d_name);
@@ -67,7 +67,7 @@ void CrawlFilesToMap(const char *dir, DocIdMap map) {
     }
     i -= 1;
   }
-  for(int i=0;i<n;i++) {
+  for (int i = 0; i < n; i++) {
     free(namelist[i]);
   }
   free(namelist);
