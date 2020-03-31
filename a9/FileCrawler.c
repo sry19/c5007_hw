@@ -1,4 +1,7 @@
 /*
+ *  Ruoyun Sun
+ *  March 30th, updated CrawlFilesToMap
+ *
  *  Created by Adrienne Slaughter
  *  CS 5007 Summer 2019
  *  Northeastern University, Seattle
