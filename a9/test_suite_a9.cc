@@ -179,6 +179,8 @@ TEST(DocumentSet, AddMovieToSet) {
   AddDocInfoToSet(mset, doc_id + 1, row_id);
   EXPECT_EQ(NumElemsInHashtable(mset->doc_index), 2);
 
+  AddDocInfoToSet(mset, doc_id, row_id + 2); // added by ruoyun
+  
   // TODO(adrienne): Check that the right row number are in the doc_index
 
   EXPECT_EQ(DocumentSetContainsDoc(mset, doc_id), 0);

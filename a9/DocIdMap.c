@@ -46,7 +46,6 @@ int PutFileInMap(char *filename, DocIdMap map) {
   // create a new ID for the file and insert it.
   HTKeyValue kvp;
   HTKeyValue old_kvp;
-  // kvp.key = FNVHash64((unsigned char*)filename, strlen(filename));
   kvp.key = NumElemsInHashtable(map)+1;
   kvp.value = filename;
   int result = PutInHashtable(map, kvp, &old_kvp);

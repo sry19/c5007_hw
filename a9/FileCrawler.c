@@ -58,11 +58,11 @@ void CrawlFilesToMap(const char *dir, DocIdMap map) {
     strcpy(cur, dir);
     strcat(cur, "/");
     strcat(cur, namelist[i]->d_name);
-
     if (namelist[i]->d_type == DT_DIR) {
       CrawlFilesToMap((const char *)cur, map);
     } else {
       char* new = (char*)malloc(sizeof(cur));
+      strcpy(new,cur);
       PutFileInMap(new, map);
     }
     i -= 1;

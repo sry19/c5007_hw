@@ -42,15 +42,15 @@ int ParseTheFiles(DocIdMap docs, MovieTitleIndex index) {
   char* filename;
   uint64_t doc_id;
   HTIter iter = CreateHashtableIterator(docs);
-  while (HTIteratorHasMore(iter)) {
+  while (HTIteratorHasMore(iter) != 0) {
     HTIteratorGet(iter, &dest);
-    filename = dest.value;
+    filename = (char*)dest.value;
     doc_id = dest.key;
     IndexTheFile(filename, doc_id, index);
     HTIteratorNext(iter);
   }
   HTIteratorGet(iter, &dest);
-  filename = dest.value;
+  filename = (char*)dest.value;
   doc_id = dest.key;
   IndexTheFile(filename, doc_id, index);
   DestroyHashtableIterator(iter);
@@ -61,7 +61,7 @@ int ParseTheFiles(DocIdMap docs, MovieTitleIndex index) {
 // Returns the number of records indexed
 int IndexTheFile(char *file, uint64_t doc_id, MovieTitleIndex index) {
   FILE *cfPtr;
-
+  printf("%s\n",file);
   if ((cfPtr = fopen(file, "r")) == NULL) {
     printf("File could not be opened\n");
     return 0;
