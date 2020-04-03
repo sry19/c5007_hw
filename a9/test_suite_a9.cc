@@ -180,7 +180,7 @@ TEST(DocumentSet, AddMovieToSet) {
   EXPECT_EQ(NumElemsInHashtable(mset->doc_index), 2);
 
   AddDocInfoToSet(mset, doc_id, row_id + 2); // added by ruoyun
-  
+
   // TODO(adrienne): Check that the right row number are in the doc_index
 
   EXPECT_EQ(DocumentSetContainsDoc(mset, doc_id), 0);
@@ -241,7 +241,7 @@ TEST(FileCrawler, CrawlFilesToMap) {
   // Create a DocIdMap
   DocIdMap docs = CreateDocIdMap();
   // Choose a directory
-  CrawlFilesToMap("data_tiny", docs);
+  CrawlFilesToMap("data_tiny/", docs);
 
   EXPECT_EQ(NumElemsInHashtable(docs), 10);
 
@@ -402,22 +402,9 @@ TEST(QueryProcessor, FindMovies) {
   int row_id2 = 4;
   m2->title = title2;
   AddMovieTitleToIndex(ind, m2, doc_id2, row_id2);
-  //DocumentSet set2 = GetDocumentSet(ind, "foo");
-
-  //SearchResultIter iter = CreateSearchResultIter(set2);
-
-  SearchResult output = NULL;
-  //SearchResultGet(iter, output);
-  SearchResultIter iter = FindMovies(ind, "foo");
-  //  SearchResultGet(iter, output);
+  char *foo = "Foo";
+  SearchResultIter iter = FindMovies(ind, foo);
   ASSERT_NE(iter, nullptr);
-  //int* payload;
-  //  LLIterGetPayload(iter->offset_iter, (void**)&payload);
-  //EXPECT_EQ(iter->cur_doc_id, 42);
-  //EXPECT_EQ(payload,4);
-  //  EXPECT_EQ(output->doc_id, 42);
-  //EXPECT_EQ(output->row_id,4);
-
   DestroySearchResultIter(iter);
   DestroyMovieTitleIndex(ind);
   DestroyMovie(m1);

@@ -25,6 +25,7 @@ DocIdMap docs;
 MovieTitleIndex docIndex;
 
 #define kMaxRowLength 1000
+#define SEC_PER_MIN 60
 
 /**
  * Open the specified file, read the specified row into the
@@ -69,7 +70,12 @@ void DoPrep(char *dir) {
 
   // Index the files
   printf("Parsing and indexing files...\n");
+  clock_t start, end;
+  start = clock();
   ParseTheFiles(docs, docIndex);
+  end = clock();
+  double time = (double)(end - start)/SEC_PER_MIN;
+  printf("Took %f seconds to execute.\n", time);
   printf("%d entries in the index.\n", NumElemsInHashtable(docIndex->ht));
 }
 

@@ -39,7 +39,8 @@ void CrawlFilesToMap(const char *dir, DocIdMap map) {
   struct dirent **namelist;
   int n;
   n = scandir(dir, &namelist, 0, alphasort);
-
+  printf("crawling dir: ");
+  printf("%s\n", dir);
   if (n == -1) {
     return;
   }
@@ -56,13 +57,13 @@ void CrawlFilesToMap(const char *dir, DocIdMap map) {
     }
     char cur[1024];
     strcpy(cur, dir);
-    strcat(cur, "/");
     strcat(cur, namelist[i]->d_name);
     if (namelist[i]->d_type == DT_DIR) {
+      strcat(cur, "/");
       CrawlFilesToMap((const char *)cur, map);
     } else {
       char* new = (char*)malloc(sizeof(cur));
-      strcpy(new,cur);
+      strcpy(new, cur);
       PutFileInMap(new, map);
     }
     i -= 1;

@@ -60,8 +60,8 @@ int ParseTheFiles(DocIdMap docs, MovieTitleIndex index) {
 
 // Returns the number of records indexed
 int IndexTheFile(char *file, uint64_t doc_id, MovieTitleIndex index) {
+  printf("processing file: %d\n", doc_id);
   FILE *cfPtr;
-  printf("%s\n",file);
   if ((cfPtr = fopen(file, "r")) == NULL) {
     printf("File could not be opened\n");
     return 0;

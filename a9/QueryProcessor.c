@@ -84,6 +84,11 @@ int SearchResultNext(SearchResultIter iter) {
     LLIterNext(iter->offset_iter);
   } else {
     HTIteratorNext(iter->doc_iter);
+    HTKeyValue kvp;
+    HTIteratorGet(iter->doc_iter, &kvp);
+    DestroyLLIter(iter->offset_iter);
+    iter->offset_iter = CreateLLIter(kvp.value);
+    iter->cur_doc_id = kvp.key;
   }
   return 0;
 }

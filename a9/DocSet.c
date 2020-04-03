@@ -42,7 +42,7 @@ int AddDocInfoToSet(DocumentSet set,  uint64_t docId, int rowId) {
     int *payload;
     while (LLIterHasNext(iter) != 0) {
       LLIterGetPayload(iter, (void**)&payload);
-      if ((int*)payload == row_ptr) {
+      if (*((int*)payload) == rowId) {
         DestroyLLIter(iter);
         return -1;
       } else {
@@ -50,12 +50,13 @@ int AddDocInfoToSet(DocumentSet set,  uint64_t docId, int rowId) {
       }
     }
     LLIterGetPayload(iter, (void**)&payload);
-    if ((int*)payload == row_ptr) {
+    if (*((int*)payload) == rowId) {
         DestroyLLIter(iter);
         return -1;
     } else {
       int* rowid = (int*)malloc(sizeof(rowId));
-      InsertLinkedList(ll, (void*)rowid);
+      *rowid = rowId;
+      InsertLinkedList(ll, rowid);
       PutInHashtable(set->doc_index, old_ll, &old_kvp);
       DestroyLLIter(iter);
       return 0;
@@ -63,7 +64,8 @@ int AddDocInfoToSet(DocumentSet set,  uint64_t docId, int rowId) {
   }
   kvp.value = CreateLinkedList();
   int* rowid = (int*)malloc(sizeof(rowId));
-  InsertLinkedList(kvp.value, (void*)rowid);
+  *rowid = rowId;
+  InsertLinkedList(kvp.value, rowid);
   PutInHashtable(set->doc_index, kvp, &old_kvp);
   return 0;
 }

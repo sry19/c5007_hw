@@ -49,14 +49,16 @@ int PutFileInMap(char *filename, DocIdMap map) {
   kvp.key = NumElemsInHashtable(map)+1;
   kvp.value = filename;
   int result = PutInHashtable(map, kvp, &old_kvp);
-  if (result == 0) {
-    return 0;
-  }
   if (result == 1) {
     return -1;
   }
+  printf("adding file to map: ");
+  printf("%s\n", filename);
+  if (result == 0) {
+    return 0;
+  }
   while (PutInHashtable(map, kvp, &old_kvp) == 2) {
-    if (old_kvp.value == kvp.value) {
+    if (strcmp(old_kvp.value, kvp.value) == 0) {
       return 0;
     }
     kvp.key++;
