@@ -36,7 +36,7 @@
 // the DirectoryParser here.
 
 /**
- * Helper function to index a single file. 
+ * Helper function to index a single file.
  *
  * \return a pointer to the number of records (lines) indexed from the file
  */
@@ -45,19 +45,47 @@ void* IndexAFile_MT(void *toBeIter);
 pthread_mutex_t ITER_MUTEX = PTHREAD_MUTEX_INITIALIZER; // global variable
 pthread_mutex_t INDEX_MUTEX = PTHREAD_MUTEX_INITIALIZER; // global variable
 
-// THINK: Why is this global? 
+// THINK: Why is this global?
 MovieTitleIndex movieIndex;
 
 int ParseTheFiles_MT(DocIdMap docs, MovieTitleIndex index, int num_threads) {
   // Create the iterator
   // Create the threads
   // Spawn the threads to work on the function IndexTheFile_MT
-  
+
   clock_t start, end;
   double cpu_time_used;
   start = clock();
 
-  
+  HTIter iter = CreateHashtableIterator(docs);
+  //HTKeyValue dest;
+  //char* filename;
+  //uint64_t doc_id;
+  pthread_t tid[num_threads];
+  //  int num_of_records;
+  //num_of_records = 0;
+  movieIndex = index;
+  while (HTIteratorHasMore(iter) != 0) {
+    //HTIteratorGet(iter, &dest);
+    //    filename = (char*)dest.value;
+    //doc_id = dest.key;
+    for (int i = 0; i < num_threads; i++) {
+      pthread_create(&tid[i], NULL, IndexAFile_MT, iter);
+    }
+    for (int i = 0; i< num_threads; i++) {
+      pthread_join(tid[i], NULL);
+      //      num_of_records += *num_records;
+      //free(num_records);
+    }
+    HTIteratorNext(iter);
+  }
+  for (int i = 0; i < num_threads; i++) {
+    pthread_create(&tid[i], NULL, IndexAFile_MT, iter);
+  }
+  for (int i = 0; i< num_threads; i++) {
+    pthread_join(tid[i], NULL);
+  }
+  DestroyHashtableIterator(iter);
 
   end = clock();
   cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
@@ -77,10 +105,41 @@ void* IndexAFile_MT(void *docname_iter) {
   // Unlock the index
   HTIter iter = (HTIter)docname_iter;
   // Don't forget to free this at some point!!
-  int* num_records = (int*)malloc(sizeof(int)); 
-  *num_records = 0; 
+  int* num_records = (int*)malloc(sizeof(int));
+  *num_records = 0;
 
 
+  pthread_mutex_lock(&ITER_MUTEX);
+  char* file;
+  uint64_t doc_id;
+  HTKeyValue dest;
+  HTIteratorGet(iter, &dest);
+  doc_id = dest.key;
+  file = (char*)dest.value;
+  pthread_mutex_unlock(&ITER_MUTEX);
+
+  //  printf("processing file: %ld\n", doc_id);
+  FILE *cfPtr;
+  int row = 0;
+  if ((cfPtr = fopen(file, "r")) == NULL) {
+    printf("File could not be opened\n");
+  } else {
+    char buffer[BUFFER_SIZE];
+
+    while (fgets(buffer, BUFFER_SIZE, cfPtr) != NULL) {
+      pthread_mutex_lock(&INDEX_MUTEX);
+      Movie *movie = CreateMovieFromRow(buffer);
+      //pthread_mutex_lock(&INDEX_MUTEX);
+      int result = AddMovieTitleToIndex(movieIndex, movie, doc_id, row);
+      if (result < 0) {
+        fprintf(stderr, "Didn't add MovieToIndex.\n");
+      }
+      row++;
+      pthread_mutex_unlock(&INDEX_MUTEX);
+      DestroyMovie(movie);  // Done with this now
+    }
+    fclose(cfPtr);
+  }
+  *num_records = row;
   return (void*)num_records;
-  
 }
