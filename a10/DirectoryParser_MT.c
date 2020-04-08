@@ -47,6 +47,7 @@ pthread_mutex_t INDEX_MUTEX = PTHREAD_MUTEX_INITIALIZER; // global variable
 
 // THINK: Why is this global?
 MovieTitleIndex movieIndex;
+int* num_records;
 
 int ParseTheFiles_MT(DocIdMap docs, MovieTitleIndex index, int num_threads) {
   // Create the iterator
@@ -58,33 +59,34 @@ int ParseTheFiles_MT(DocIdMap docs, MovieTitleIndex index, int num_threads) {
   start = clock();
 
   HTIter iter = CreateHashtableIterator(docs);
-  //HTKeyValue dest;
-  //char* filename;
-  //uint64_t doc_id;
+
+
   pthread_t tid[num_threads];
-  //  int num_of_records;
-  //num_of_records = 0;
+
   movieIndex = index;
   while (HTIteratorHasMore(iter) != 0) {
-    //HTIteratorGet(iter, &dest);
-    //    filename = (char*)dest.value;
-    //doc_id = dest.key;
     for (int i = 0; i < num_threads; i++) {
       pthread_create(&tid[i], NULL, IndexAFile_MT, iter);
     }
     for (int i = 0; i< num_threads; i++) {
       pthread_join(tid[i], NULL);
-      //      num_of_records += *num_records;
-      //free(num_records);
     }
     HTIteratorNext(iter);
   }
+  //for (int i = 0; i< num_threads; i++) {
+  //pthread_join(tid[i], NULL);
+  //}
+  /*
   for (int i = 0; i < num_threads; i++) {
     pthread_create(&tid[i], NULL, IndexAFile_MT, iter);
   }
   for (int i = 0; i< num_threads; i++) {
+    free(num_records);
     pthread_join(tid[i], NULL);
+    //free(num_records);
   }
+  */
+  IndexAFile_MT(iter);
   DestroyHashtableIterator(iter);
 
   end = clock();
@@ -109,10 +111,11 @@ void* IndexAFile_MT(void *docname_iter) {
   *num_records = 0;
 
 
-  pthread_mutex_lock(&ITER_MUTEX);
+  // pthread_mutex_lock(&ITER_MUTEX);
   char* file;
   uint64_t doc_id;
   HTKeyValue dest;
+  pthread_mutex_lock(&ITER_MUTEX);
   HTIteratorGet(iter, &dest);
   doc_id = dest.key;
   file = (char*)dest.value;
@@ -127,9 +130,9 @@ void* IndexAFile_MT(void *docname_iter) {
     char buffer[BUFFER_SIZE];
 
     while (fgets(buffer, BUFFER_SIZE, cfPtr) != NULL) {
-      pthread_mutex_lock(&INDEX_MUTEX);
+      //      pthread_mutex_lock(&INDEX_MUTEX);
       Movie *movie = CreateMovieFromRow(buffer);
-      //pthread_mutex_lock(&INDEX_MUTEX);
+      pthread_mutex_lock(&INDEX_MUTEX);
       int result = AddMovieTitleToIndex(movieIndex, movie, doc_id, row);
       if (result < 0) {
         fprintf(stderr, "Didn't add MovieToIndex.\n");
