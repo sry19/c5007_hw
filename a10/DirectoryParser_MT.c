@@ -46,8 +46,8 @@
  */
 void* IndexAFile_MT(void *toBeIter);
 
-pthread_mutex_t ITER_MUTEX = PTHREAD_MUTEX_INITIALIZER; // global variable
-pthread_mutex_t INDEX_MUTEX = PTHREAD_MUTEX_INITIALIZER; // global variable
+pthread_mutex_t ITER_MUTEX = PTHREAD_MUTEX_INITIALIZER;  // global variable
+pthread_mutex_t INDEX_MUTEX = PTHREAD_MUTEX_INITIALIZER;  // global variable
 
 // THINK: Why is this global?
 MovieTitleIndex movieIndex;
