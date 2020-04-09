@@ -63,7 +63,10 @@ int ParseTheFiles_MT(DocIdMap docs, MovieTitleIndex index, int num_threads) {
   pthread_t tid[num_threads];
 
   movieIndex = index;
+  int file_count = 0;
   while (HTIteratorHasMore(iter) != 0) {
+    printf("processing file: %d\n", file_count);
+    file_count++;
     for (int i = 0; i < num_threads; i++) {
       pthread_create(&tid[i], NULL, IndexAFile_MT, iter);
     }
@@ -74,6 +77,8 @@ int ParseTheFiles_MT(DocIdMap docs, MovieTitleIndex index, int num_threads) {
     }
     HTIteratorNext(iter);
   }
+  printf("processing file: %d\n", file_count);
+  file_count++;
   for (int i = 0; i < num_threads; i++) {
     pthread_create(&tid[i], NULL, IndexAFile_MT, iter);
   }
@@ -126,7 +131,6 @@ void* IndexAFile_MT(void *docname_iter) {
     char buffer[BUFFER_SIZE];
 
     while (fgets(buffer, BUFFER_SIZE, cfPtr) != NULL) {
-      //      pthread_mutex_lock(&INDEX_MUTEX);
       Movie *movie = CreateMovieFromRow(buffer);
       pthread_mutex_lock(&INDEX_MUTEX);
       int result = AddMovieTitleToIndex(movieIndex, movie, doc_id, row);
@@ -135,7 +139,7 @@ void* IndexAFile_MT(void *docname_iter) {
       }
       row++;
       pthread_mutex_unlock(&INDEX_MUTEX);
-      DestroyMovie(movie);  // Done with this now
+      DestroyMovie(movie);
     }
     fclose(cfPtr);
   }
