@@ -45,3 +45,5 @@ Explanation: if the machine has only one core, there won't be much benefit when 
 #10 threads:
 * Took 1324.569971 seconds to execute.
 * 639209 entries in the index
+
+Explanation: The purpose of this experiment is to show how multiple cores will benefit the multi-threaded approaches. However, I think because there are a small number of rows in each file, the benefit is not very obvious.
