@@ -1,18 +1,18 @@
-##one core
-#single-threaded DirectoryParser:
-*Took 570.146464 seconds to execute.
-*639209 entries in the index
-*Crawled 53 files
+## one core
+# single-threaded DirectoryParser:
+* Took 570.146464 seconds to execute.
+* 639209 entries in the index
+* Crawled 53 files
 
-#5 threads:
-*676.927030 seconds to execute.
-*639209 entries in the index
-*Crawled 53 files
+# 5 threads:
+* 676.927030 seconds to execute.
+* 639209 entries in the index
+* Crawled 53 files
 
-#10 threads:
-*1545.831295 seconds to execute.
-*639209 entries in the index.
-*Crawled 53 files
+# 10 threads:
+* 1545.831295 seconds to execute.
+* 639209 entries in the index.
+* Crawled 53 files
 
 ## experiment 1
 # one core
@@ -31,18 +31,18 @@ Explanation: if the machine has only one core, there won't be much benefit when 
 
 ## experiment 2
 ## 3 cores
-##one·core$
-#single-threaded·DirectoryParser:
-*Took 547.973791 seconds to execute.
-*639209 entries in the index
-*Crawled·53·files$
+## one·core$
+# single-threaded·DirectoryParser:
+* Took 547.973791 seconds to execute.
+* 639209 entries in the index
+* Crawled·53·files$
 
 # 5 threads:
 * Took 829.315983 seconds to execute.
 * 639209 entries in the index
 * Crawled 53 files
 
-#10 threads:
+# 10 threads:
 * Took 1324.569971 seconds to execute.
 * 639209 entries in the index
 
