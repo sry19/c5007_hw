@@ -1,4 +1,8 @@
 /*
+ *  Ruoyun Sun
+ *  April 8th
+ *  updated 2 methods
+ *
  *  Created by Adrienne Slaughter
  *  CS 5007 Summer 2019
  *  Northeastern University, Seattle
@@ -59,7 +63,6 @@ int ParseTheFiles_MT(DocIdMap docs, MovieTitleIndex index, int num_threads) {
 
   HTIter iter = CreateHashtableIterator(docs);
 
-
   pthread_t tid[num_threads];
 
   movieIndex = index;
@@ -111,8 +114,6 @@ void* IndexAFile_MT(void *docname_iter) {
   int* num_records = (int*)malloc(sizeof(int));
   *num_records = 0;
 
-
-  // pthread_mutex_lock(&ITER_MUTEX);
   char* file;
   uint64_t doc_id;
   HTKeyValue dest;
@@ -122,7 +123,6 @@ void* IndexAFile_MT(void *docname_iter) {
   file = (char*)dest.value;
   pthread_mutex_unlock(&ITER_MUTEX);
 
-  //  printf("processing file: %ld\n", doc_id);
   FILE *cfPtr;
   int row = 0;
   if ((cfPtr = fopen(file, "r")) == NULL) {
