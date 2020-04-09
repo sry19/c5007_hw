@@ -27,7 +27,7 @@
 * 639209 entries in the index
 * Crawled 53 files
 
-Explanation: if the machine has only one core, there won't be much benefit when using multiple threads. Additionally, creating more threads may slow this program.
+Explanation: if the machine has only one core, there won't be much benefit when using multiple threads. Additionally, creating more threads may slow this program. In this test, DirectoryParser_MT with one thread seems to be faster than single-threaded DirectoryParser. However, I think many other reasons will affect the result and DirectoryParser_MT actually does not bring much benefit.
 
 ## experiment 2
 ## 3 cores
