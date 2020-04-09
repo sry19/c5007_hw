@@ -31,7 +31,7 @@ Explanation: if the machine has only one core, there won't be much benefit when 
 
 ## experiment 2
 ## 3 cores
-## one core
+
 # single-threaded·DirectoryParser:
 * Took 547.973791 seconds to execute.
 * 639209 entries in the index
