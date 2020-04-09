@@ -47,7 +47,6 @@ pthread_mutex_t INDEX_MUTEX = PTHREAD_MUTEX_INITIALIZER; // global variable
 
 // THINK: Why is this global?
 MovieTitleIndex movieIndex;
-int* num_records;
 
 int ParseTheFiles_MT(DocIdMap docs, MovieTitleIndex index, int num_threads) {
   // Create the iterator
@@ -69,24 +68,21 @@ int ParseTheFiles_MT(DocIdMap docs, MovieTitleIndex index, int num_threads) {
       pthread_create(&tid[i], NULL, IndexAFile_MT, iter);
     }
     for (int i = 0; i< num_threads; i++) {
-      pthread_join(tid[i], NULL);
+      int* num;
+      pthread_join(tid[i], &num);
+      free(num);
     }
     HTIteratorNext(iter);
   }
-  //for (int i = 0; i< num_threads; i++) {
-  //pthread_join(tid[i], NULL);
-  //}
-  /*
   for (int i = 0; i < num_threads; i++) {
     pthread_create(&tid[i], NULL, IndexAFile_MT, iter);
   }
   for (int i = 0; i< num_threads; i++) {
-    free(num_records);
-    pthread_join(tid[i], NULL);
-    //free(num_records);
+    int* num;
+    pthread_join(tid[i], &num);
+    free(num);
   }
-  */
-  IndexAFile_MT(iter);
+
   DestroyHashtableIterator(iter);
 
   end = clock();
