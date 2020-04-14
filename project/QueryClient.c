@@ -17,7 +17,6 @@ char *ip = "127.0.0.1";
 
 void RunQuery(char *query) {
   // Find the address
-  printf("port string %s \n",port_string);
   struct addrinfo hints, *result;
   memset(&hints, 0, sizeof(struct addrinfo));
   hints.ai_family = AF_INET; /* IPv4 only */
@@ -37,7 +36,6 @@ void RunQuery(char *query) {
     return;
   }
 
-  //  connect(sock_fd, result->ai_addr, result->ai_addrlen);
   char response[1000];
   int l = read(sock_fd, response, 999);
   response[l] = '\0';
@@ -47,7 +45,7 @@ void RunQuery(char *query) {
     printf("error\n");
     return;
   }
-  //  SendAck(sock_fd);
+
   // Do the query-protocol
   char *buffer = query;
   write(sock_fd, buffer, strlen(buffer));
@@ -55,7 +53,7 @@ void RunQuery(char *query) {
   char resp[1000];
   int len = read(sock_fd, resp, 999);
   resp[len] = '\0';
-  //  printf("RECEIVED: %s %d %d\n", resp,resp[1],resp[2]);
+
   SendAck(sock_fd);
   char res[1000];
   int le = read(sock_fd, res, 999);
