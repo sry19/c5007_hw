@@ -73,12 +73,11 @@ int HandleClient(int sock_fd) {
   }
   // For each response
   SearchResult output;
+  char * movieSearchResult;
   while (SearchResultIterHasMore(iter)) {
     SearchResultGet(iter, output);
     // Send response
-    CopyRowFromFile(SearchResult output,
-                   DocIdMap docs,
-                    char *movieSearchResult);
+    CopyRowFromFile(output, docs, movieSearchResult);
     write(client_fd, movieSearchResult, strlen(movieSearchResult));
     // Wait for ACK
     char buffer_output[BUFFER_SIZE];
@@ -91,9 +90,7 @@ int HandleClient(int sock_fd) {
     SearchResultNext(iter);
   }
   SearchResultGet(iter, output);
-  CopyRowFromFile(SearchResult output,
-                   DocIdMap docs,
-                    char *movieSearchResult);
+  CopyRowFromFile(output, docs, movieSearchResult);
   write(client_fd, movieSearchResult, strlen(movieSearchResult));
   char buffer_output_final[BUFFER_SIZE];
   len = read(client_fd, buffer_output_final, sizeof(buffer_output_final) - 1);
