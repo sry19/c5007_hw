@@ -25,27 +25,28 @@ void RunQuery(char *query) {
   int s;
   s = getaddrinfo(ip, port_string, &hints, &result);
   if (s != 0) {
-    printf("s is 0");
+    printf("s is not 0");
     return;
   }
   // Create the socket
   int sock_fd = socket(AF_INET, SOCK_STREAM, 0);
   // Connect to the server
-  /*
+
   if (connect(sock_fd, result->ai_addr, result->ai_addrlen) == -1) {
     printf("no connect");
     return;
   }
-  */
-  connect(sock_fd, result->ai_addr, result->ai_addrlen);
-  //  char response[1000];
-  //int len = read(sock_fd, response, 999);
-  //response[len] = '\0';
-  //int r = CheckAck(response);
-  //if (r == -1) {
-  //printf("error\n");
-  //return;
-  //}
+
+  //  connect(sock_fd, result->ai_addr, result->ai_addrlen);
+  char response[1000];
+  int l = read(sock_fd, response, 999);
+  response[l] = '\0';
+  printf("response: %s",response);
+  int r = CheckAck(response);
+  if (r == -1) {
+    printf("error\n");
+    return;
+  }
   //  SendAck(sock_fd);
   // Do the query-protocol
   char *buffer = query;
@@ -54,7 +55,17 @@ void RunQuery(char *query) {
   char resp[1000];
   int len = read(sock_fd, resp, 999);
   resp[len] = '\0';
-  printf("RECEIVED: %s\n", resp);
+  //  printf("RECEIVED: %s %d %d\n", resp,resp[1],resp[2]);
+  SendAck(sock_fd);
+  char res[1000];
+  int le = read(sock_fd, res, 999);
+  res[le] = '\0';
+  while (strcmp(res, "GOODBYE") != 0) {
+    SendAck(sock_fd);
+    printf("%s\n", res);
+    le = read(sock_fd,res,999);
+    res[le] = '\0';
+  }
   // Close the connection
   close(sock_fd);
   freeaddrinfo(result);
@@ -103,8 +114,10 @@ int CheckIpAddress(char *ip, char *port) {
   char resp[1000];
   int len = read(sock_fd, resp, 999);
   resp[len] = '\0';
+  printf("%s", resp);
   int r = CheckAck(resp);
   if (r == -1) {
+    printf("not reseive ack");
     return 0;
   }
   // Send a goodbye
