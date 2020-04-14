@@ -39,17 +39,19 @@ void RunQuery(char *query) {
   char response[1000];
   int l = read(sock_fd, response, 999);
   response[l] = '\0';
-  printf("response: %s",response);
+
   int r = CheckAck(response);
   if (r == -1) {
     printf("error\n");
     return;
   }
+  printf("Connected to movie server\n");
+  printf("\n");
 
   // Do the query-protocol
   char *buffer = query;
   write(sock_fd, buffer, strlen(buffer));
-  printf("enter term\n");
+
   char resp[1000];
   int len = read(sock_fd, resp, 999);
   resp[len] = '\0';
@@ -112,10 +114,10 @@ int CheckIpAddress(char *ip, char *port) {
   char resp[1000];
   int len = read(sock_fd, resp, 999);
   resp[len] = '\0';
-  printf("%s", resp);
+
   int r = CheckAck(resp);
   if (r == -1) {
-    printf("not reseive ack");
+    printf("not receive ack");
     return 0;
   }
   // Send a goodbye
@@ -139,7 +141,6 @@ int main(int argc, char **argv) {
   }
 
   if (CheckIpAddress(ip, port_string)) {
-    printf("after check ip\n");
     RunPrompt();
   }
   return 0;
