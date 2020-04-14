@@ -101,7 +101,7 @@ int HandleClient(int sock_fd) {
   }
 
   // Cleanup
-  Cleanup();
+  //  Cleanup();
   // Send GOODBYE
   SendGoodbye(client_fd);
   // close connection.
@@ -215,6 +215,8 @@ int main(int argc, char **argv) {
   }
   // Got Kill signal
   close(sock_fd);
+
+  freeaddrinfo(result);
 
   Cleanup();
 
