@@ -39,30 +39,76 @@ void sigint_handler(int sig) {
 
 int HandleClient(int sock_fd) {
   // Step 5: Accept connection
-  
+  printf("Waiting for connection...\n");
+  int client_fd = accept(sock_fd, NULL, NULL);
+  printf("Connection made: client_fd=%d\n", client_fd);
   // Step 6: Read, then write if you want
 
   // Send ACK
-
+  SendAck(client_fd);
   // Listen for query
   // If query is GOODBYE close ocnnection
-
+  char buffer[1000];
+  int len = read(client_fd, buffer, sizeof(buffer) - 1);
+  buffer[len] = '\0';
+  printf("SERVER RECEIVED: %s \n", buffer);
+  if (CheckGoodbye(buffer) == 0) {
+    close(client_fd);
+    return 1;
+  }
   // Run query and get responses
-  
+  SearchResultIter iter = FindMovies(docIndex, buffer);
   // Send number of responses
-  
+  int number = NumResultsInIter(iter);
+  char msg[SEARCH_RESULT_LENGTH];
+  sprintf(msg, "%d", number);
+  write(client_fd, msg, strlen(msg));
   // Wait for ACK
-
+  char buffer_ack[1000];
+  len = read(client_fd, buffer_ack, sizeof(buffer_ack) - 1);
+  buffer[len] = '\0';
+  if (CheckAck(buffer_ack) == -1) {
+    printf("not receive ack\n");
+    return 1;
+  }
   // For each response
-  
+  SearchResult output;
+  while (SearchResultIterHasMore(iter)) {
+    SearchResultGet(iter, output);
     // Send response
+    CopyRowFromFile(SearchResult output,
+                   DocIdMap docs,
+                    char *movieSearchResult);
+    write(client_fd, movieSearchResult, strlen(movieSearchResult));
     // Wait for ACK
- 
+    char buffer_output[BUFFER_SIZE];
+    int len = read(client_fd, buffer_output, sizeof(buffer_output) - 1);
+    buffer_output[len] = '\0';
+    if (CheckAck(buffer_output) == -1) {
+      printf("not receive ack from the client\n");
+      return -1;
+    }
+    SearchResultNext(iter);
+  }
+  SearchResultGet(iter, output);
+  CopyRowFromFile(SearchResult output,
+                   DocIdMap docs,
+                    char *movieSearchResult);
+  write(client_fd, movieSearchResult, strlen(movieSearchResult));
+  char buffer_output_final[BUFFER_SIZE];
+  len = read(client_fd, buffer_output_final, sizeof(buffer_output_final) - 1);
+  buffer_output_final[len] = '\0';
+  if (CheckAck(buffer_output_final) == -1) {
+    printf("not receive ack from the client\n");
+    return -1;
+  }
+
   // Cleanup
-
+  Cleanup();
   // Send GOODBYE
-
+  SendGoodbye(client_fd);
   // close connection.
+  close(client_fd);
   return 0;
 }
 
@@ -147,13 +193,29 @@ int main(int argc, char **argv) {
 
   int s;
   // Step 1: Get address stuff
+  struct addrinfo hints, *result;
+  memset(&hints, 0, sizeof(struct addrinfo));
+  hints.ai_family = AF_INET;
+  hints.ai_socktype = SOCK_STREAM;
+  hints.ai_flags = AI_PASSIVE;
 
+  s = getaddrinfo("localhost", "1501", &hints, &result);
+  if (s != 0) {
+    fprintf(stderr, "getaddrinfo: %s\n", gai_strerror(s));
+    exit(1);
+  }
   // Step 2: Open socket
-  
+  int sock_fd = socket(AF_INET, SOCK_STREAM, 0);
   // Step 3: Bind socket
-  
+  if (bind(sock_fd, result->ai_addr, result->ai_addrlen) != 0) {
+    perror("bind()");
+    exit(1);
+  }
   // Step 4: Listen on the socket
-  
+  if (listen(sock_fd, 10) != 0) {
+    perror("listen()");
+    exit(1);
+  }
   // Got Kill signal
   close(sock_fd);
 
