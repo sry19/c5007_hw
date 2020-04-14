@@ -17,6 +17,10 @@ char *ip = "127.0.0.1";
 
 void RunQuery(char *query) {
   // Find the address
+  if (strlen(query) > 100) {
+    printf("Please limit your query to 100 characters\n\n");
+    return;
+  }
   struct addrinfo hints, *result;
   memset(&hints, 0, sizeof(struct addrinfo));
   hints.ai_family = AF_INET; /* IPv4 only */
@@ -108,7 +112,7 @@ int CheckIpAddress(char *ip, char *port) {
   }
   int sock_fd = socket(AF_INET, SOCK_STREAM, 0);
   if (connect(sock_fd, result->ai_addr, result->ai_addrlen) == -1) {
-    printf("connect failed\n");
+    printf("Connection Failed\n");
     return 0;
   }
   char resp[1000];
@@ -117,7 +121,7 @@ int CheckIpAddress(char *ip, char *port) {
 
   int r = CheckAck(resp);
   if (r == -1) {
-    printf("not receive ack");
+    printf("cannot receive ACK");
     return 0;
   }
   // Send a goodbye
