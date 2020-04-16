@@ -87,7 +87,7 @@ int HandleClient(int sock_fd) {
   }
   // For each response
   SearchResult output = (SearchResult)malloc(sizeof(*output));
-  char * movieSearchResult = (char*)malloc(sizeof(*movieSearchResult));
+  //  char * movieSearchResult = (char*)malloc(sizeof(*movieSearchResult));
   while (SearchResultIterHasMore(iter)) {
     SearchResultGet(iter, output);
     // Send response
@@ -114,13 +114,13 @@ int HandleClient(int sock_fd) {
     return -1;
   }
   free(output);
-  free(movieSearchResult);
+  //free(movieSearchResult);
   // Cleanup
   //  Cleanup();
   // Send GOODBYE
   SendGoodbye(client_fd);
   // close connection.
-  //  close(client_fd);
+  close(client_fd);
   return 0;
 }
 
@@ -241,7 +241,12 @@ int main(int argc, char **argv) {
   }
   close(client_fd);
   printf("start handle\n");
-  HandleClient(sock_fd);
+  while (1) {
+    int result = HandleClient(sock_fd);
+    if (result == -1) {
+      break;
+    }
+  }
   // Got Kill signal
   close(sock_fd);
 
