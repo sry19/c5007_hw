@@ -43,40 +43,37 @@ int HandleClient(int sock_fd) {
   int client_fd = accept(sock_fd, NULL, NULL);
   printf("Connection made: client_fd=%d\n", client_fd);
   // Step 6: Read, then write if you want
-
+  printf("Client connected\n");
   // Send ACK
-  printf("send ack\n");
-   SendAck(client_fd);
-   //  char buf[1000];
-   //printf("read and checkgoodbye\n");
-   //int l = read(client_fd, buf, sizeof(buf) - 1);
-   //buf[l] = '\0';
-   //if (CheckGoodbye(buf) == -1) {
-   //printf("not receive goodbye\n");
-   //return 1;
-   //}
-  //l = read(client_fd, buf, sizeof(buf) - 1);
-  //buf[l] = '\0';
- 
-  //SendAck(client_fd);
+  SendAck(client_fd);
   // Listen for query
   // If query is GOODBYE close ocnnection
-  printf("wait for a search\n");
   char buffer[1000];
   int len = read(client_fd, buffer, sizeof(buffer) - 1);
   buffer[len] = '\0';
-  printf("SERVER RECEIVED: %s \n", buffer);
+  printf("checking goodbye...%s \n", buffer);
   if (CheckGoodbye(buffer) == 0) {
-    //    close(client_fd);
+    close(client_fd);
     return 1;
   }
   // Run query and get responses
   SearchResultIter iter = FindMovies(docIndex, buffer);
+  if (iter == NULL) {
+    printf("no result\n");
+    int t = 0;
+    write(client_fd, &t, sizeof(t));
+    char buf_ack[1000];
+    len = read(client_fd, buf_ack, sizeof(buf_ack) - 1);
+    buf_ack[len] = '\0';
+    SendGoodbye(client_fd);
+    close(client_fd);
+    return 0;
+  }
   // Send number of responses
   int number = NumResultsInIter(iter);
   char msg[SEARCH_RESULT_LENGTH];
   sprintf(msg, "%d", number);
-  write(client_fd, msg, strlen(msg));
+  write(client_fd, &number, sizeof(number));
   // Wait for ACK
   char buffer_ack[1000];
   len = read(client_fd, buffer_ack, sizeof(buffer_ack) - 1);
@@ -87,7 +84,7 @@ int HandleClient(int sock_fd) {
   }
   // For each response
   SearchResult output = (SearchResult)malloc(sizeof(*output));
-  //  char * movieSearchResult = (char*)malloc(sizeof(*movieSearchResult));
+
   while (SearchResultIterHasMore(iter)) {
     SearchResultGet(iter, output);
     // Send response
@@ -113,11 +110,13 @@ int HandleClient(int sock_fd) {
     printf("not receive ack from the client\n");
     return -1;
   }
-  free(output);
-  //free(movieSearchResult);
+
   // Cleanup
-  //  Cleanup();
+  free(output);
+  DestroySearchResultIter(iter);
+
   // Send GOODBYE
+  //  SendAck(client_fd);
   SendGoodbye(client_fd);
   // close connection.
   close(client_fd);
@@ -219,6 +218,12 @@ int main(int argc, char **argv) {
   // Step 2: Open socket
   int sock_fd = socket(AF_INET, SOCK_STREAM, 0);
   // Step 3: Bind socket
+  int yes=1;
+  // lose the pesky "Address already in use" error message
+  //  if (setsockopt(listener,SOL_SOCKET,SO_REUSEADDR,&yes,sizeof yes) == -1) {
+  //perror("setsockopt");
+  //exit(1);
+  //}
   if (bind(sock_fd, result->ai_addr, result->ai_addrlen) != 0) {
     perror("bind()");
     exit(1);
@@ -228,29 +233,31 @@ int main(int argc, char **argv) {
     perror("listen()");
     exit(1);
   }
+  printf("Waiting for connection...\n");
   int client_fd = accept(sock_fd, NULL, NULL);
-  //printf("response to ip check\n");
+  printf("Client connected\n");
   int r =  SendAck(client_fd);
   char buffer[1000];
   int len = read(client_fd, buffer, sizeof(buffer) - 1);
   buffer[len] = '\0';
-  printf("check goodbye\n");
+  printf("checking goodbye...%s\n", buffer);
   if (CheckGoodbye(buffer) == -1) {
     printf("not receive goodbye\n");
     return -1;
   }
   close(client_fd);
-  printf("start handle\n");
+
   while (1) {
     int result = HandleClient(sock_fd);
-    if (result == -1) {
-      break;
-    }
+    //if (result == -1) {
+    //  break;
+    //}
   }
   // Got Kill signal
+  freeaddrinfo(result);
   close(sock_fd);
 
-  freeaddrinfo(result);
+  //freeaddrinfo(result);
 
   Cleanup();
 
