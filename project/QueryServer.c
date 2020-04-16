@@ -45,15 +45,29 @@ int HandleClient(int sock_fd) {
   // Step 6: Read, then write if you want
 
   // Send ACK
-  SendAck(client_fd);
+  printf("send ack\n");
+   SendAck(client_fd);
+   //  char buf[1000];
+   //printf("read and checkgoodbye\n");
+   //int l = read(client_fd, buf, sizeof(buf) - 1);
+   //buf[l] = '\0';
+   //if (CheckGoodbye(buf) == -1) {
+   //printf("not receive goodbye\n");
+   //return 1;
+   //}
+  //l = read(client_fd, buf, sizeof(buf) - 1);
+  //buf[l] = '\0';
+ 
+  //SendAck(client_fd);
   // Listen for query
   // If query is GOODBYE close ocnnection
+  printf("wait for a search\n");
   char buffer[1000];
   int len = read(client_fd, buffer, sizeof(buffer) - 1);
   buffer[len] = '\0';
   printf("SERVER RECEIVED: %s \n", buffer);
   if (CheckGoodbye(buffer) == 0) {
-    close(client_fd);
+    //    close(client_fd);
     return 1;
   }
   // Run query and get responses
@@ -66,14 +80,14 @@ int HandleClient(int sock_fd) {
   // Wait for ACK
   char buffer_ack[1000];
   len = read(client_fd, buffer_ack, sizeof(buffer_ack) - 1);
-  buffer[len] = '\0';
+  buffer_ack[len] = '\0';
   if (CheckAck(buffer_ack) == -1) {
     printf("not receive ack\n");
     return 1;
   }
   // For each response
-  SearchResult output;
-  char * movieSearchResult;
+  SearchResult output = (SearchResult)malloc(sizeof(*output));
+  char * movieSearchResult = (char*)malloc(sizeof(*movieSearchResult));
   while (SearchResultIterHasMore(iter)) {
     SearchResultGet(iter, output);
     // Send response
@@ -99,13 +113,14 @@ int HandleClient(int sock_fd) {
     printf("not receive ack from the client\n");
     return -1;
   }
-
+  free(output);
+  free(movieSearchResult);
   // Cleanup
   //  Cleanup();
   // Send GOODBYE
   SendGoodbye(client_fd);
   // close connection.
-  close(client_fd);
+  //  close(client_fd);
   return 0;
 }
 
@@ -196,7 +211,7 @@ int main(int argc, char **argv) {
   hints.ai_socktype = SOCK_STREAM;
   hints.ai_flags = AI_PASSIVE;
 
-  s = getaddrinfo("localhost", "1501", &hints, &result);
+  s = getaddrinfo(NULL, "1501", &hints, &result);
   if (s != 0) {
     fprintf(stderr, "getaddrinfo: %s\n", gai_strerror(s));
     exit(1);
@@ -213,6 +228,20 @@ int main(int argc, char **argv) {
     perror("listen()");
     exit(1);
   }
+  int client_fd = accept(sock_fd, NULL, NULL);
+  //printf("response to ip check\n");
+  int r =  SendAck(client_fd);
+  char buffer[1000];
+  int len = read(client_fd, buffer, sizeof(buffer) - 1);
+  buffer[len] = '\0';
+  printf("check goodbye\n");
+  if (CheckGoodbye(buffer) == -1) {
+    printf("not receive goodbye\n");
+    return -1;
+  }
+  close(client_fd);
+  printf("start handle\n");
+  HandleClient(sock_fd);
   // Got Kill signal
   close(sock_fd);
 
