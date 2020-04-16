@@ -48,7 +48,7 @@ int HandleClient(int sock_fd) {
   SendAck(client_fd);
   // Listen for query
   // If query is GOODBYE close ocnnection
-  char buffer[1000];
+  char buffer[BUFFER_SIZE];
   int len = read(client_fd, buffer, sizeof(buffer) - 1);
   buffer[len] = '\0';
   printf("checking goodbye... %s \n", buffer);
@@ -75,7 +75,7 @@ int HandleClient(int sock_fd) {
   sprintf(msg, "%d", number);
   write(client_fd, &number, sizeof(number));
   // Wait for ACK
-  char buffer_ack[1000];
+  char buffer_ack[BUFFER_SIZE];
   len = read(client_fd, buffer_ack, sizeof(buffer_ack) - 1);
   buffer_ack[len] = '\0';
   if (CheckAck(buffer_ack) == -1) {
@@ -116,7 +116,6 @@ int HandleClient(int sock_fd) {
   DestroySearchResultIter(iter);
 
   // Send GOODBYE
-  //  SendAck(client_fd);
   SendGoodbye(client_fd);
   // close connection.
   close(client_fd);
@@ -238,7 +237,7 @@ int main(int argc, char **argv) {
   int client_fd = accept(sock_fd, NULL, NULL);
   printf("Client connected\n");
   int r =  SendAck(client_fd);
-  char buffer[1000];
+  char buffer[BUFFER_SIZE];
   int len = read(client_fd, buffer, sizeof(buffer) - 1);
   buffer[len] = '\0';
   printf("checking goodbye... %s\n", buffer);
@@ -250,15 +249,9 @@ int main(int argc, char **argv) {
 
   while (1) {
     int result = HandleClient(sock_fd);
-    //if (result == -1) {
-    //  break;
-    //}
   }
   // Got Kill signal
-  //  freeaddrinfo(result);
   close(sock_fd);
-
-  //freeaddrinfo(result);
 
   Cleanup();
 
