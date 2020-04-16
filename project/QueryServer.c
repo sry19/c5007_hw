@@ -51,7 +51,7 @@ int HandleClient(int sock_fd) {
   char buffer[1000];
   int len = read(client_fd, buffer, sizeof(buffer) - 1);
   buffer[len] = '\0';
-  printf("checking goodbye...%s \n", buffer);
+  printf("checking goodbye... %s \n", buffer);
   if (CheckGoodbye(buffer) == 0) {
     close(client_fd);
     return 1;
@@ -210,7 +210,7 @@ int main(int argc, char **argv) {
   hints.ai_socktype = SOCK_STREAM;
   hints.ai_flags = AI_PASSIVE;
 
-  s = getaddrinfo(NULL, "1501", &hints, &result);
+  s = getaddrinfo(NULL, port, &hints, &result);
   if (s != 0) {
     fprintf(stderr, "getaddrinfo: %s\n", gai_strerror(s));
     exit(1);
@@ -220,10 +220,10 @@ int main(int argc, char **argv) {
   // Step 3: Bind socket
   int yes=1;
   // lose the pesky "Address already in use" error message
-  //  if (setsockopt(listener,SOL_SOCKET,SO_REUSEADDR,&yes,sizeof yes) == -1) {
-  //perror("setsockopt");
-  //exit(1);
-  //}
+  if (setsockopt(sock_fd,SOL_SOCKET,SO_REUSEADDR,&yes,sizeof(yes)) == -1) {
+    perror("setsockopt");
+    exit(1);
+  }
   if (bind(sock_fd, result->ai_addr, result->ai_addrlen) != 0) {
     perror("bind()");
     exit(1);
@@ -233,6 +233,7 @@ int main(int argc, char **argv) {
     perror("listen()");
     exit(1);
   }
+  freeaddrinfo(result);
   printf("Waiting for connection...\n");
   int client_fd = accept(sock_fd, NULL, NULL);
   printf("Client connected\n");
@@ -240,7 +241,7 @@ int main(int argc, char **argv) {
   char buffer[1000];
   int len = read(client_fd, buffer, sizeof(buffer) - 1);
   buffer[len] = '\0';
-  printf("checking goodbye...%s\n", buffer);
+  printf("checking goodbye... %s\n", buffer);
   if (CheckGoodbye(buffer) == -1) {
     printf("not receive goodbye\n");
     return -1;
@@ -254,7 +255,7 @@ int main(int argc, char **argv) {
     //}
   }
   // Got Kill signal
-  freeaddrinfo(result);
+  //  freeaddrinfo(result);
   close(sock_fd);
 
   //freeaddrinfo(result);
