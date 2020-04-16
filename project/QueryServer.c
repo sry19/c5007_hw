@@ -59,7 +59,7 @@ int HandleClient(int sock_fd) {
   // Run query and get responses
   SearchResultIter iter = FindMovies(docIndex, buffer);
   if (iter == NULL) {
-    printf("no result\n");
+    printf("num_responses: 0\n");
     int t = 0;
     write(client_fd, &t, sizeof(t));
     char buf_ack[1000];
@@ -71,6 +71,7 @@ int HandleClient(int sock_fd) {
   }
   // Send number of responses
   int number = NumResultsInIter(iter);
+  printf("num_responses: %d\n", number);
   char msg[SEARCH_RESULT_LENGTH];
   sprintf(msg, "%d", number);
   write(client_fd, &number, sizeof(number));
@@ -113,12 +114,14 @@ int HandleClient(int sock_fd) {
 
   // Cleanup
   free(output);
+  printf("Destroying search result iter\n");
   DestroySearchResultIter(iter);
 
   // Send GOODBYE
   SendGoodbye(client_fd);
   // close connection.
   close(client_fd);
+  printf("Client connection closed.\n");
   return 0;
 }
 

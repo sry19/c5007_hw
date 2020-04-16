@@ -57,7 +57,7 @@ void RunQuery(char *query) {
   write(sock_fd, buffer, strlen(buffer));
 
   int t;
-  read(sock_fd, &t, sizeof(int));
+  int len = read(sock_fd, &t, sizeof(int));
   printf("Receiving %d results\n", t);
 
   SendAck(sock_fd);
