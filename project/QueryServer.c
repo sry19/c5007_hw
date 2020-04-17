@@ -161,9 +161,8 @@ int main(int argc, char **argv) {
   int debug_flag = 0;
   int c;
 
-  while ((c = getopt (argc, argv, "dp:f:")) != -1) {
-    switch (c)
-      {
+  while ((c = getopt(argc, argv, "dp:f:")) != -1) {
+    switch (c) {
       case 'd':
         debug_flag = 1;
         break;
@@ -220,9 +219,9 @@ int main(int argc, char **argv) {
   // Step 2: Open socket
   int sock_fd = socket(AF_INET, SOCK_STREAM, 0);
   // Step 3: Bind socket
-  int yes=1;
+  int yes = 1;
   // lose the pesky "Address already in use" error message
-  if (setsockopt(sock_fd,SOL_SOCKET,SO_REUSEADDR,&yes,sizeof(yes)) == -1) {
+  if (setsockopt(sock_fd, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof(yes)) == -1) {
     perror("setsockopt");
     exit(1);
   }

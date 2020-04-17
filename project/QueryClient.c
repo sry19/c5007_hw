@@ -67,7 +67,7 @@ void RunQuery(char *query) {
   while (strcmp(res, "GOODBYE") != 0) {
     SendAck(sock_fd);
     printf("%s\n", res);
-    le = read(sock_fd,res,999);
+    le = read(sock_fd, res, 999);
     res[le] = '\0';
   }
   // Close the connection
@@ -95,9 +95,9 @@ void RunPrompt() {
   }
 }
 
-// This function connects to the given IP/port to ensure 
+// This function connects to the given IP/port to ensure
 // that it is up and running, before accepting queries from users.
-// Returns 0 if can't connect; 1 if can. 
+// Returns 0 if can't connect; 1 if can.
 int CheckIpAddress(char *ip, char *port) {
   // Connect to the server
   // Listen for an ACK
