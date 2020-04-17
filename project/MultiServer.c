@@ -132,59 +132,32 @@ int HandleClient(int client_fd, char* query) {
 int HandleConnections(int sock_fd, int debug) {
   // Step 5: Accept connection
   // Fork on every connection
-  pid_t pid[N];
-  int child_status;
-  int i;
-  for (i = 0; i < N; i++) {
-    if ((pid[i] = fork()) == 0) {
-      if (debug == 1) {
-        sleep(10);
-      }
-      /*
-      printf("Waiting for connection...\n");
-      int client_fd = accept(sock_fd, NULL, NULL);
-      printf("Client connected\n");
-      int r =  SendAck(client_fd);
-      char buffer[BUFFER_SIZE];
-      int len = read(client_fd, buffer, sizeof(buffer) - 1);
-      buffer[len] = '\0';
-      printf("checking goodbye... %s\n", buffer);
-      if (CheckGoodbye(buffer) == -1) {
-        printf("not receive goodbye\n");
-        return -1;
-      }
-      close(client_fd);
-      */
-      while (1) {
-        printf("Waiting for connection...\n");
-        int client_fd = accept(sock_fd, NULL, NULL);
-        printf("Connection made: client_fd=%d\n", client_fd);
-        // Step 6: Read, then write if you want
-        printf("Client connected\n");
-        // Send ACK
-        SendAck(client_fd);
-        // Listen for query
-        // If query is GOODBYE close ocnnection
-        char buf[BUFFER_SIZE];
-        int len = read(client_fd, buf, sizeof(buf) - 1);
-        buf[len] = '\0';
-        printf("checking goodbye... %s \n", buf);
-        if (CheckGoodbye(buf) == 0) {
-          close(client_fd);
-          return 1;
-        }
-        int result = HandleClient(client_fd, buf);
-      }
-      exit(i);
-    }
+  pid_t pid;
+  printf("Waiting for connection...\n");
+  int client_fd = accept(sock_fd, NULL, NULL);
+  printf("Connection made: client_fd=%d\n", client_fd);
+  // Step 6: Read, then write if you want
+  printf("Client connected\n");
+  // Send ACK
+  SendAck(client_fd);
+  // Listen for query
+  // If query is GOODBYE close ocnnection
+  char buf[BUFFER_SIZE];
+  int len = read(client_fd, buf, sizeof(buf) - 1);
+  buf[len] = '\0';
+  printf("checking goodbye... %s \n", buf);
+  if (CheckGoodbye(buf) == 0) {
+    close(client_fd);
+    return 1;
   }
-  for (i = 0; i< N;i++) {
-    pid_t wpid = waitpid(pid[i], &child_status, 0);
-    if (WIFEXITED(child_status))
-      printf("Child %d terminated with exit status %d\n"
-               ,wpid, WEXITSTATUS(child_status));
-    else
-      printf("Child %d terminated abnormally\n", wpid);
+  pid = fork();
+  if (pid == 0) {
+    if (debug == 1) {
+      sleep(10);
+    }
+    int result = HandleClient(client_fd, buf);
+    Cleanup();
+    exit(0);
   }
   return 0;
 }
@@ -313,7 +286,9 @@ int main(int argc, char **argv) {
   }
   freeaddrinfo(result);
 
-  HandleConnections(sock_fd, debug_flag);
+  while (1) {
+    HandleConnections(sock_fd, debug_flag);
+  }
 
   // Got Kill signal
   close(sock_fd);
